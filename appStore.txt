@@ -1,0 +1,4 @@
+1. Build .apk
+2. Remove console plugin
+3. Build Release .apk file
+4. keytool -genkey -v -keystore docket.keystore -alias docket -keyalg RSA -keysize 2048 -validity 10000
