@@ -1,0 +1,14 @@
+<a [routerLink]="['/products']">
+    < Back</a>
+
+        <h2>Update Product</h2>
+
+        <p *ngIf="!prodExist">Product doesn't exist</p>
+
+        <form (ngSubmit)='updateProduct()' [formGroup]="productForm">
+            <label>Name: </label><input id="nameId" type="text" placeholder="name" formControlName="name"><br><br>
+            <label>Color: </label><input id="colorId" type="text" placeholder="color" formControlName="color"><br><br>
+            <input type='submit' value='Update Product'>
+        </form>
+
+        <h3 *ngIf='updateStatus' (click)="gotoProducts()">{{ statusMessage }}</h3>

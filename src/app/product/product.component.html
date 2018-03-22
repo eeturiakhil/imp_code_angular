@@ -1,0 +1,17 @@
+<a [routerLink]="['/products']">
+    < Back</a>
+
+        <h2>Add New Product</h2>
+
+        <form id='formNewProduct' novalidate name='formNewProduct' #productData='ngForm' (ngSubmit)='addNewProduct(productData)'>
+            <label>Name: </label><input type="text" placeholder="name" required [(ngModel)]=productData.name name="name" #name="ngModel"><br><br>
+            <label>Color: </label><input type="text" placeholder="color" required [(ngModel)]=productData.color name="color" #color="ngModel"><br><br>
+            <input type="submit" [disabled]="!productData.valid">
+        </form>
+        <br><br>
+
+        <!-- <h3 *ngIf='insertStatus' (click)="gotoProducts()">{{ statusMessage }}</h3> -->
+
+        <alert type="success" *ngIf='insertStatus'>
+            <strong>Well done!</strong> {{ statusMessage }}
+        </alert>
