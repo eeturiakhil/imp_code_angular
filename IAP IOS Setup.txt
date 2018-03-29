@@ -1,0 +1,44 @@
+1. IAP enabled in APP ID.
+2. Paid apple account contract
+3. Create a app in Itunes
+
+IAP in App in Itunes:
+1. Type of Product
+2. Name of Product
+3. Product ID
+4. Price
+5. Dscription 
+6. Screenshot
+Cleared for SALE
+
+Create Sandbox test users
+Sign-in in real device with Sandbox test user
+
+Enable App Capabilities in Xcode
+
+Certificate Gnerating Steps:
+1. One should ideally have 1 development and 1 distribution certificate.
+
+Distribution:
+1. Create a certificate with Production App Store and Ad Hoc.
+2. Generate a CSR file with keychain access.
+3. KeyChain Access -> Certificate Assisstant -> Request a Certificate Assistant from a Certificate Authority
+4. Apple ID email ID and keep CA Email Address
+5. Save in your Disk.
+6. Upload the CSR file that is saved on Desktop.
+7. Download the Certificate that is been created and click on it to add it to the keychain access.
+
+App uploading to Itunes Steps:
+1. Create APP ID in developer account
+2. Create a Provisioning Profile for the APP ID just created and Distribution Certificate.
+3. Download the Provisioning certificate and click to add it to the Xcode project.
+4. Xcode -> Preferences -> Add Developer account to Xcode.
+
+Itunes connect Setup:
+1. Create an APP with same bundle ID.
+2. Xcode -> Project Target -> Automatically Sign-in and change Signing Provision manually with our App provision certificate.
+3. Select Generic IOS device.
+4. Product -> Archive.
+5. Upload to App Store.
+
+In target -> build setting -> Change Swift 4 to Swift 3
