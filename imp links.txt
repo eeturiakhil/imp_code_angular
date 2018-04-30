@@ -1,0 +1,540 @@
+
+https://www.js-tutorials.com/javascript-tutorial/encrypt-decrypt-string-angularjs-using-aes-crypto-js/
+
+Request header field Access-Control-Allow-Headers is not allowed by Access-Control-Allow-Headers in preflight response in angularjs
+
+header("Access-Control-Allow-Origin: *"); header("Access-Control-Allow-Credentials: true"); header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With"); header('P3P: CP="CAO PSA OUR"'); // Makes IE to support cookies header("Content-Type: application/json; charset=utf-8");
+
+Solution:
+1. PHP:
+https://stackoverflow.com/questions/35232130/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr
+
+2. Java: 
+https://stackoverflow.com/questions/25727306/request-header-field-access-control-allow-headers-is-not-allowed-by-access-contr
+
+3. Node Express:
+https://stackoverflow.com/questions/32500073/request-header-field-access-control-allow-headers-is-not-allowed-by-itself-in-pr
+
+https://public-api.wordpress.com/rest/v1/freshly-pressed/
+
+ng-bind-html="p.content"
+<div  ng-bind-html="p.content"></div>
+
+https://stackoverflow.com/questions/31502015/my-ionic-app-works-fine-on-browser-but-does-not-open-in-my-phone
+
+https://devdactic.com/ionic-image-upload-php/
+
+https://ionicacademy.com/?utm_source=devdactic_post_intro&utm_content=text
+
+https://devdactic.com
+
+http://ngcordova.com/docs/plugins/capture/
+
+https://www.raymondcamden.com/2015/07/27/recording-and-saving-audio-in-cordova-applications/
+
+https://stackoverflow.com/questions/27756496/upload-recording-from-cordova-media-plugin
+
+https://www.npmjs.com/package/cordova-plugin-media
+
+https://stackoverflow.com/questions/34926789/ionic-get-file-from-audio-recorded-with-cordova-plugin-media
+
+https://dzone.com/articles/recording-and-saving-audio-in-cordova-applications
+
+https://forum.ionicframework.com/t/how-can-i-use-cordovafile-to-delete-and-upload-file-that-create-by-cordovamedia-newmedia/13533
+
+https://stackoverflow.com/questions/12870295/after-recording-audio-file-where-this-file-will-be-saved/41546991#41546991
+
+https://forum.ionicframework.com/t/how-to-get-audio-file-after-recording-cordova-plugin-media/15022/11
+
+https://stackoverflow.com/questions/12870295/after-recording-audio-file-where-this-file-will-be-saved
+
+https://stackoverflow.com/questions/34926789/ionic-get-file-from-audio-recorded-with-cordova-plugin-media/35078513#35078513
+
+http://ngcordova.com/docs/plugins/fileTransfer/
+
+https://www.tutorialspoint.com/cordova/cordova_file_transfer.htm
+
+https://code.tutsplus.com/tutorials/build-an-audioplayer-with-phonegap-application-setup--mobile-16347
+
+https://github.com/emj365/cordova-plugin-audio-recorder-api
+
+https://github.com/floatinghotpot/testaudio/tree/master/plugins/com.rjfun.cordova.plugin.lowlatencyaudio
+
+https://www.npmjs.com/package/cordova-plugin-audio-recorder-api
+
+http://ngcordova.com/docs/plugins/file/
+
+https://www.raymondcamden.com/2015/07/27/recording-and-saving-audio-in-cordova-applications/
+
+https://www.npmjs.com/package/cordova-plugin-audio-recorder-api
+
+https://dzone.com/articles/recording-and-saving-audio-in-cordova-applications
+http://qnimate.com/find-recorded-audio-file-location-in-cordova/
+
+https://jsfiddle.net/JeJenny/ZG9re/
+
+https://www.tutorialspoint.com/cordova/cordova_media_capture.htm
+
+https://www.raymondcamden.com/2015/07/27/recording-and-saving-audio-in-cordova-applications/
+
+http://ngcordova.com/docs/plugins/file/
+
+https://github.com/apache/cordova-plugin-file
+
+http://www.gajotres.net/using-cordova-file-transfer-plugin-with-ionic-framework/
+
+https://www.codementor.io/jadsalhani/how-to-set-up-ionic-app-du107si9y
+
+https://www.thepolyglotdeveloper.com/2014/09/manage-files-in-android-and-ios-using-ionicframework/
+
+https://forum.ionicframework.com/t/is-it-possible-to-create-app-like-whatsapp-using-ionic/29982/9
+
+https://www.airpair.com/ionic-framework/posts/ionic-file-browser-app
+
+https://logbon72.github.io/angular-recorder/
+
+https://medium.com/ionic-and-the-mobile-web/how-to-write-cordova-plugins-864e40025f2
+
+https://stackoverflow.com/questions/40421523/justgage-no-element-with-id-0-angular-js
+
+https://www.npmjs.com/package/cordova-plugin-android-permissions
+
+http://sandbox786.com/ielts7band/Userservices/adupload/9178
+
+https://www.thepolyglotdeveloper.com/2015/01/upload-files-remote-server-using-ionic-framework/
+
+http://www.gajotres.net/using-cordova-file-transfer-plugin-with-ionic-framework/
+
+http://santoshshinde2012.blogspot.in/2015/03/file-upload-download-with-ng-cordova.html
+
+https://www.thoughtco.com/audio-file-mime-types-3469485
+
+https://myinsurebook.com/agent/logout
+
+http://www.uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs/
+
+https://shazwazza.com/post/uploading-files-and-json-data-in-the-same-request-with-angular-js/
+
+https://www.tutorialspoint.com/angularjs/angularjs_upload_file.htm
+
+http://www.folio3.com/blog/angularjs-file-upload-example-tutorial/
+
+https://www.sourcecodester.com/tutorials/php/11208/simple-image-upload-using-angularjsphp.html
+
+http://itsolutionstuff.com/post/angularjs-simple-image-upload-with-preview-example-in-phpexample.html
+
+https://dzone.com/articles/add-google-login-to-your-ionic-app
+
+http://excellencenodejsblog.com/cordova-ionic-google-oauth-login-for-your-mobile-app/
+
+https://www.tutorialspoint.com/cordova/cordova_camera.htm
+
+https://dzone.com/articles/add-google-login-to-your-ionic-app
+
+https://github.com/Wizcorp/phonegap-facebook-plugin/blob/master/platforms/android/README.md
+
+https://github.com/jeduan/cordova-plugin-facebook4
+
+https://medium.com/@satpal.tanan/setup-google-login-in-your-cordova-phonegap-app-cb1587bb5892
+
+https://stackoverflow.com/questions/25041929/angularjs-routeprovider-http-status-403
+
+https://stackoverflow.com/questions/34043892/angularjs-catch-all-status-codes-for-http-actions
+
+https://docs.angularjs.org/api/ng/service/$http
+
+http://ngcordova.com/docs/plugins/pushNotifications/
+
+https://github.com/alvarotrigo/fullPage.js/issues/145
+
+https://stackoverflow.com/questions/10719848/scroll-page-on-text-input-focus-for-mobile-devices
+
+<preference name="Fullscreen" value="true" />
+
+https://github.com/renanoliveira/cordova-phone-call-trap
+
+<preference name="ShowSplashScreenSpinner" value="false" />
+
+https://stackoverflow.com/questions/28343242/how-to-convert-xcode-32-bit-app-into-64-bit-xcode-app
+
+https://stackoverflow.com/questions/25919449/how-to-generate-an-ios-ipa-file-with-ionic-framework
+
+file -> settings -> install -> platformio-ide-terminal
+
+https://stackoverflow.com/questions/10719848/scroll-page-on-text-input-focus-for-mobile-devices
+
+https://stackoverflow.com/questions/19110144/ios7-issues-with-webview-focus-when-using-keyboard-html/19182670#19182670.
+
+https://forum.ionicframework.com/t/scroll-to-the-focused-item-input-when-the-keyboard-is-up/422/6
+
+https://androidcookbook.com/Recipe.seam?recipeId=422
+
+list of websites:
+
+https://forum.ionicframework.com/t/ios-keyboard-next-button/8082
+
+https://stackoverflow.com/questions/23470439/replace-go-button-on-soft-keyboard-with-next-in-phonegap
+
+https://stackoverflow.com/questions/35809876/how-to-detect-incoming-calls-in-ios-and-windows-device-using-phonegap
+
+https://dzone.com/articles/using-charts-in-your-ionic-framework-mobile-app
+
+https://www.jsdelivr.com/package/npm/fusioncharts
+
+https://github.com/jtblin/angular-chart.js/issues/41
+
+https://www.npmjs.com/package/angular-swiper
+
+https://github.com/ksachdeva/angular-swiper
+
+https://github.com/ksachdeva/angular-swiper/pull/37/files?short_path=04c6e90
+
+ hide-nav-bar="true"
+ hide-nav-bar="true"
+
+$ionicSideMenuDelegate.canDragContent(false);
+
+Chart.defaults.global.tooltips.enabled = false;
+
+https://www.npmjs.com/package/ionic-datepicker
+
+https://www.google.co.in/search?ei=_8MSWt7lGcyCmQGb4LvoAw&q=ionic+datepicker+example&oq=ionic+datepicker+&gs_l=psy-ab.3.0.0l10.1533799.1546758.0.1548244.28.26.1.0.0.0.474.4586.3-8j4.13.0....0...1.1.64.psy-ab..14.13.4592.0..0i67k1j0i22i30k1j0i131i46i67k1j46i131i67k1j0i131k1j0i10k1.332.GrrhE6yr700
+
+http://embed.plnkr.co/ec5ksTHfSBEVs1BqBm6O/
+
+https://github.com/twinssbc/Ionic-Calendar
+
+https://www.npmjs.com/package/ionic-datepicker
+
+.directive('heightBind', function ($timeout) {
+ return {
+   scope: { someCtrlFn: '&callbackFn' },
+   link: function (scope, el, attrs) {
+           $timeout(init, false);
+           //Initialization
+           function init(){
+             console.log('offsetHeight = ' + el[0].offsetHeight);
+             scope.someCtrlFn({arg1: el[0].offsetHeight});
+           }
+       }
+ }
+})
+
+$scope.ctrlFn = function(test) {
+       console.log(test);
+ }
+  <p height-bind callback-fn="ctrlFn(arg1)" style="padding:5px 10px;">{{title}}</p><br>
+
+Bar code Scanner:
+
+http://ngcordova.com/docs/plugins/barcodeScanner/
+
+https://github.com/phonegap/phonegap-plugin-barcodescanner
+
+https://www.npmjs.com/package/cordova-plugin-barcodescanner
+
+https://github.com/hypery2k/cordova-barcodescanner-plugin
+
+https://github.com/wildabeast/BarcodeScanner
+
+https://github.com/tjwoon/csZBar
+
+https://github.com/phonegap/phonegap-plugin-barcodescanner/issues/98
+
+https://github.com/phonegap/phonegap-plugin-barcodescanner/issues/382
+
+https://stackoverflow.com/questions/42352971/how-to-change-the-devices-keyboard-to-uppercase
+
+https://coderwall.com/p/uqqraq/angular-promises-basics-q-service-for-http
+
+https://stackoverflow.com/questions/20369377/how-to-use-http-get-in-angularjs-correctly-in-specific-for-an-external-api-cal
+
+http://michalostruszka.pl/blog/2013/07/31/double-requests/
+
+https://www.bennadel.com/blog/2612-using-the-http-service-in-angularjs-to-make-ajax-requests.htm
+
+https://www.google.co.in/search?source=hp&ei=XR8zWuqeBYHq0gT12onICw&q=angularjs+get+request+hitting+the+server+2+times+in+one+request+in+network+how+to+stop+it&oq=angularjs+get+request+hitting+the+server+2+times+in+one+request+in+network+how+to+stop+it&gs_l=psy-ab.3...56572.141329.0.141566.111.104.6.0.0.0.272.15436.0j87j6.94.0....0...1.1.64.psy-ab..11.55.8541.6..0j35i39k1j0i131i67k1j0i67k1j0i131k1j0i46i67k1j46i67k1j0i10k1j0i13k1j0i22i30k1j33i160k1j33i21k1j33i22i29i30k1.157.VprOHttT6o8
+
+https://stackoverflow.com/questions/29984581/how-do-you-disable-the-submit-button-after-a-single-click-to-prevent-multiple-su
+
+https://stackoverflow.com/questions/34652650/why-angular-ajax-request-is-visible-twice-in-chrome-network-tab
+
+Latest:
+
+https://stackoverflow.com/questions/34652650/why-angular-ajax-request-is-visible-twice-in-chrome-network-tab
+
+https://stackoverflow.com/questions/31568701/how-to-stop-http-being-called-multiple-times-in-an-angular-controller
+
+https://github.com/angular/angular.js/issues/1981
+
+https://www.google.co.in/search?biw=1366&bih=637&ei=pew3WsfhDoqNvQTR7YfgDg&q=how+to+stop+%24http+success+function+called+twice&oq=how+to+stop+%24http+success+function+called+twice&gs_l=psy-ab.3...2253954.2265825.0.2268049.20.20.0.0.0.0.170.2227.3j17.20.0....0...1.1.64.psy-ab..0.0.0....0.yQmb5Si8sPM
+
+<button class="item button button-full button-balanced item-icon-right" ng-click="logout()">
+       <i class="icon ion-log-in"></i>
+       Log In
+     </button>
+
+hi
+
+"<preference name="AndroidPersistentFileLocation" value="Compatibility" />"
+
+https://stackoverflow.com/questions/5488339/how-can-i-find-and-run-the-keytool/11493316
+
+https://stackoverflow.com/questions/5488339/how-can-i-find-and-run-the-keytool
+
+https://stackoverflow.com/questions/6602422/access-denied-when-creating-keystore-for-android-app
+
+https://ionicframework.com/docs/v1/guide/publishing.html
+
+https://code.google.com/archive/p/openssl-for-windows/downloads
+
+How to publish an Android app on Google Play 2017 - New Google interfaceHow to publish an Android app on Google Play 2017 - New Google interface
+
+https://www.youtube.com/watch?v=vIusIlp6YGE
+
+https://github.com/docketrun/app-build
+
+https://ionicframework.com/docs/v1/guide/publishing.html
+
+https://github.com/emj365/cordova-plugin-audio-recorder-api
+
+https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-file/index.html
+
+https://stackoverflow.com/questions/34333180/unable-to-record-and-save-audio-in-ionic-app-on-ios
+
+https://www.thepolyglotdeveloper.com/2014/09/manage-files-in-android-and-ios-using-ionicframework/
+
+https://www.npmjs.com/package/cordova-plugin-file#sample
+
+https://github.com/ionic-team/ionic/issues/1151
+
+https://github.com/ionic-team/ionic/issues/3602
+
+focusFirstInput: true
+
+https://github.com/docketrun/app-build
+
+docket.keystore to docket.jks
+
+How to Release Ionic App and Publish in Google Play StoreHow to Release Ionic App and Publish in Google Play Store
+
+https://www.youtube.com/watch?v=GBINbO3_Jp0
+
+How to publish an Android app on Google Play 2017 - New Google interfaceHow to publish an Android app on Google Play 2017 - New Google interface
+
+https://www.youtube.com/watch?v=vIusIlp6YGE
+
+How to update Ionic App on Google Play Store ? - cordova commandHow to update Ionic App on Google Play Store ? - cordova command
+
+https://www.youtube.com/watch?v=CjtAdvjlpzM
+
+http://www.nikola-breznjak.com/blog/codeproject/adding-admob-to-ionic-framework-application-step-by-step/
+
+https://eeturiakhil.github.io/quickStartA4/
+
+https://www.npmjs.com/~angular
+
+npm i jquery --save
+
+npm i popper.js --save
+
+npm i ngx-bootstrap bootstrap --save
+
+https://scotch.io/tutorials/angular-2-http-requests-with-observables
+
+https://scotch.io/tutorials/mean-app-with-angular-2-and-the-angular-cli
+
+https://play.google.com/apps/testing/com.ielts7band.application
+
+<div id="g1"></div>.
+g1 = new JustGage({
+id: "g1",
+value: getRandomInt(0, 90),
+min: 0,
+max: 90,
+title: "Lone Ranger",
+label: "miles traveled"
+});
+
+https://www.concretepage.com/angular-2/angular-4-crud-example
+
+https://medium.com/beautiful-angular/show-loader-on-every-request-in-angular-2-9a0fca86afef
+
+https://stackoverflow.com/questions/44403834/using-ios-11-devices-with-xcode-8-2-1/44476556
+
+https://stackoverflow.com/questions/41220525/model-is-running-ios-10-2-14c92-which-may-not-be-supported-by-this-version-of/41928402#41928402
+
+https://stackoverflow.com/questions/44381860/use-xcode-8-with-ios-11
+
+iOS How to change your app from 32 bit to 64 bit in XcodeiOS   How to change your app from 32 bit to 64 bit in Xcode
+
+https://www.youtube.com/watch?v=XFebIuZN2AU
+
+https://github.com/ionic-team/ionic/issues/4849
+
+https://www.youtube.com/user/androiddevelopers
+
+https://android-developers.googleblog.com/2017/12/improving-app-security-and-performance.html
+
+https://stackoverflow.com/questions/26944922/find-if-an-ipa-file-is-32-or-64-bit-macos-unix
+
+https://apple.stackexchange.com/questions/204717/unable-to-download-the-app-at-this-time
+
+https://issues.apache.org/jira/browse/CB-6223?focusedCommentId=13930935&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-13930935
+
+http://cordova.apache.org/announcements/2014/11/25/ios-64bit.html
+
+https://www.npmjs.com/package/ng2-pdf-viewer
+
+https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/
+
+https://www.npmjs.com/package/epubjs-es6
+
+https://github.com/ncbi/PubReader
+
+how to disable print preview in chrome using javascript
+
+https://stackoverflow.com/questions/39804411/how-to-send-pdf-file-to-print-dialog-using-php
+
+https://medium.com/technoetics/handling-user-login-and-registration-using-nodejs-and-mysql-81b146e37419
+
+https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+
+https://stackoverflow.com/questions/41106125/angular-2-using-this-inside-settimeout
+
+npm install --save @angular/platform-server @angular/animations
+
+https://coursetro.com/posts/code/68/Make-your-Angular-App-SEO-Friendly-(Angular-4-+-Universal)
+
+   npm install @angular/animations@latest --save
+
+https://coursetro.com/posts/code/63/Angular-4-Animation-Tutorial
+
+https://github.com/AlexDisler/cordova-plugin-inapppurchase
+
+https://github.com/phonegap/phonegap-plugin-barcodescanner/issues/270
+
+https://github.com/Cordobo/cordova-plugin-ios-camera-permissions
+
+$cordovaBarcodeScanner
+
+cordova-plugin-barcodescanner 0.7.3 "BarcodeScanner"
+
+cordova-plugin-camera 2.2.0 "Camera"
+
+phonegap-plugin-barcodescanner 7.0.0 "BarcodeScanner"
+
+cordova-plugin-android-permissions 0.6.0 "Permissions"
+
+function checkPermission(){
+       // alert("hi");
+       var permissions = cordova.plugins.permissions;
+       var list = [
+                     permissions.READ_EXTERNAL_STORAGE,
+                     permissions.RECORD_AUDIO
+                  ];
+
+       permissions.hasPermission(list, success, null);
+
+       function error() {
+         // alert('First Camera or Accounts permission is not turned on');
+       };
+
+       function success( status ) {
+         if( !status.hasPermission ) {
+
+           permissions.requestPermissions(list, function(status) {
+               if( !status.hasPermission ) error();
+             },
+             error);
+         }
+       };
+
+     };
+CAMERA:
+
+https://www.thepolyglotdeveloper.com/2014/09/install-android-cordova-ionic-framework-ubuntu/
+
+null
+
+https://forum.ionicframework.com/t/how-to-add-keys-to-xxx-info-plist-for-ionic-platform-add-ios/72604/2
+
+https://forum.ionicframework.com/t/best-way-to-show-first-view-dynamically-when-starting-app/16423/3
+
+https://developer.realexpayments.com/#!/integration-api/apple-pay/java/ios#3dsecurity-accordion   
+
+https://github.com/aporat/store-receipt-validator
+
+http://iap.gracenode.org/
+
+https://github.com/AlexDisler/cordova-inapppurchases-app
+
+https://github.com/voltrue2/in-app-purchase
+
+https://alexdisler.com/2016/03/20/validating-cordova-in-app-purchases-on-ios-and-android-using-nodejs/
+
+https://alexdisler.com/2016/02/29/in-app-purchases-ionic-cordova/
+
+https://github.com/aporat/store-receipt-validator/blob/master/examples/test_itunes_receipt.php
+
+https://github.com/aporat/store-receipt-validator/
+
+https://github.com/AlexDisler/cordova-plugin-inapppurchase
+
+https://medium.com/@sprocompany/how-to-easily-configure-in-app-purchases-into-a-mobile-application-afa3baccbc1e
+
+https://github.com/j3k0/cordova-plugin-purchase
+
+https://developer.apple.com/library/content/ApplePay_Guide/
+
+https://docs.spreedly.com/payment-gateways/global-iris/
+
+https://docs.spreedly.com/guides/apple-pay/
+
+https://github.com/j3k0/cordova-plugin-purchase
+
+https://support.apple.com/en-us/HT202023
+
+https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/StoreKitGuide/Introduction.html
+
+https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/StoreKitGuide/Chapters/AppReview.html#//apple_ref/doc/uid/TP40008267-CH10-SW4
+
+https://medium.com/@sprocompany/how-to-easily-configure-in-app-purchases-into-a-mobile-application-afa3baccbc1e
+
+https://hackernoon.com/swift-how-to-add-in-app-purchases-in-your-ios-app-c1dc2fc82319
+
+https://developer.apple.com/support/apple-pay-sandbox/
+
+https://www.realexpayments.com/resources/guides/realcontrol/RealControl%20ApplePay%20-%20User%20Guide%20v1.0.pdf
+
+https://developer.apple.com/apple-pay/Apple-Pay-Identity-Guidelines.pdf
+
+https://www.raywenderlich.com/87300/apple-pay-tutorial
+
+5140b6f2c24563e464db1e039a4027fd
+
+https://betafamily.com/supersend/app/c1c68d3e
+
+https://devdactic.com/restful-api-user-authentication-1/
+
+https://www.djamware.com/post/5a878b3c80aca7059c142979/securing-mean-stack-angular-5-web-application-using-passport
+
+https://github.com/bluegray1015/angular4-express-mysql
+
+AIzaSyCuXNyC2ce9SAZ4FuSnEHnYDn5BYa9J4xo
+
+ionic cordova resources --icon
+
+https://github.com/krish-dev/cordova-plugin-k-imagecropper
+
+ionic cordova run ios -l -c
+
+http://idangero.us/swiper/demos/
+
+https://market.ionicframework.com/plugins/tabbedslidebox
+
+https://github.com/JKnorr91/ion-slide-box-tabs
+
+https://www.techinasia.com/talk/9-common-mistakes-ionic-developers
+
+
