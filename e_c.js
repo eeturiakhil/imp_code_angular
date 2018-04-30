@@ -24,9 +24,11 @@
       .controller('staffStatusEditCtrl', staffStatusEditCtrl)
       .controller('staffAppsEditCtrl', staffAppsEditCtrl)
       .controller('viewRotaCtrl', viewRotaCtrl)
+      .controller('todayRotaCtrl', todayRotaCtrl)
       .controller('addRotaCtrl', addRotaCtrl)
       .controller('AppManagementCtrl', AppManagementCtrl)
       .controller('updateAppCodeCtrl', updateAppCodeCtrl)
+      .controller('DemoCtrl', DemoCtrl)
       // .module("ion-datetime-picker", ["ionic"])
       .directive("limitTo", [function() {
             return {
@@ -40,7 +42,7 @@
                     });
                 }
             }
-        }])
+        }])      
         .factory('firstTime', function($cacheFactory) {
               return $cacheFactory('myData');
         });
@@ -65,6 +67,10 @@
                                 {name: "UAH", code: "₴"}, // Ukrainian Hryvnia
                                 {name: "VND", code: "₫"} // Vietnamese Dong
                              ];      
+
+      function DemoCtrl($scope){
+
+      };
 
       function AppCtrl($scope, ChangeCodeService, $ionicSideMenuDelegate, $ionicPopup, $ionicLoading, LoginService, $state, $rootScope, DigitalCodeService, AUTH_EVENTS){
         var vmApp = this;
@@ -422,7 +428,7 @@
            LoginService.logoutUser();
            $state.go("app.login", {}, {reload : true});
          };
-
+         
       };            
 
       function ChangeCodeCtrl($scope, LoginService, $ionicPopup, ChangeCodeService, userService, $state, $rootScope) {
@@ -477,6 +483,8 @@
               console.log("matched"); 
               return;             
             } else{
+              vcCode.loginData.newDigitalCode = "";
+              vcCode.loginData.confirmDigitalCode = ""; 
               window.plugins.toast.showWithOptions({
                     message: 'Codes does not match!',
                     duration: 'long',
@@ -495,25 +503,43 @@
                 })
               $timeout(function()
               {
-              }, 2000);
-              vcCode.loginData.newDigitalCode = "";
-              vcCode.loginData.confirmDigitalCode = "";               
+              }, 2000);              
             }          
           }    
         };
 
         vcCode.updateDigitalCode = function(code){
           var Code = code + ".Code";
-          var alertPopup = $ionicPopup.alert({
-                        title: 'Success!',
-                        template: 'Code Updated!',
-                        cssClass: 'Success'
-               });
-              alertPopup.then(function(res) {      
-              LoginService.updateCodeData(Code);
-              ChangeCodeService.hideModal();          
+          LoginService.updateCodeData(Code);
+          ChangeCodeService.hideModal();  
+          window.plugins.toast.showWithOptions({
+                  message: 'Code changed successfully',
+                  duration: 'long',
+                  position: 'center',
+                  styling: {
+                    borderRadius: 30, // a bit less than default, 0 means a square Toast
+                    backgroundColor: '#CCCCCC', // make sure you use #RRGGBB. Default #333333
+                    alpha: 180, // 0-255, 0 being fully transparent
+                    padding: {
+                      top: 50,
+                      right: 30,
+                      // bottom: 20,
+                      left: 30
+                  }
+                }
+              })
+            $timeout(function()
+            {
+            }, 2000); 
+          // var alertPopup = $ionicPopup.alert({
+          //               title: 'Success!',
+          //               template: 'Code Updated!',
+          //               cssClass: 'Success'
+          //      });
+              // alertPopup.then(function(res) {      
+                      
                   // $state.go("app.dashobard", {}, {reload : true}); 
-              });  
+              // });  
           
         };
 
@@ -594,15 +620,27 @@
             if(code1 === code2){
               console.log("matched");              
             } else{
-                var alertPopup = $ionicPopup.alert({
-                          title: 'Error!',
-                          template: 'Codes does not match!',
-                          cssClass: 'Error'
-                });
-                alertPopup.then(function(res) {                
-                    vmCode.loginData.digitalCode = "";
-                    vmCode.loginData.confirmDigitalCode = "";
-                });
+                vmCode.loginData.digitalCode = "";
+                vmCode.loginData.confirmDigitalCode = "";
+                window.plugins.toast.showWithOptions({
+                        message: 'Codes does not match!',
+                        duration: 'long',
+                        position: 'center',
+                        styling: {
+                          borderRadius: 30, // a bit less than default, 0 means a square Toast
+                          backgroundColor: '#CCCCCC', // make sure you use #RRGGBB. Default #333333
+                          alpha: 180, // 0-255, 0 being fully transparent
+                          padding: {
+                            top: 50,
+                            right: 30,
+                            // bottom: 20,
+                            left: 30
+                        }
+                      }
+                    })
+                  $timeout(function()
+                  {
+                  }, 2000);                                                                        
             }          
           }          
         };
@@ -753,6 +791,50 @@
         // console.log($rootScope.graph_color);
         console.log($rootScope.CODE);
 
+        if(userService.getData != "" && userService.getData != undefined){
+          vmDash.dashboard.userData = userService.getData();
+          if(!angular.equals({}, vmDash.dashboard.userData) && vmDash.dashboard.userData != null){
+            $rootScope.firstTime = true;
+          }
+          else{
+            $rootScope.firstTime = false;
+          }          
+          // console.log(vmDash.dashboard.userData);
+          DashboardData(1, '', '');
+          userService.setData(null);
+        }
+
+        vmDash.clearStartDate = function(){          
+          vmDash.dashboard.startDate = '';
+          vmDash.dashboard.endDate = '';          
+        };
+
+        vmDash.clearEndDate = function(){                    
+          vmDash.dashboard.endDate = '';          
+        };
+
+        var cache = firstTime.get('fTime');
+        if (cache === "true") { // If there’s something in the cache, use it!
+          $scope.variable = true;
+        }
+        else { // Otherwise, let’s generate a new instance
+          firstTime.put('fTime', "true");
+          $scope.variable = false;
+        }
+        if(!$scope.variable && !$rootScope.firstTime && $rootScope.CODE != "false" && !$rootScope.dataStatus){
+          SecurityCodeService.showModal();
+        }     
+
+
+        vmDash.dashboard.dashData = [];
+
+        if($rootScope.online){
+          DashboardData(1, '', '');  
+        }
+        else{
+          $rootScope.dataStatus = false;
+        }
+
         vmDash.dashboard.selectItems = [
           {id: 1, name: 'Today'},
           {id: 2, name: 'Week'},
@@ -760,6 +842,106 @@
           {id: 5, name: 'Custom'}
         ];
 
+        vmDash.startDatePicker = function() {
+          var ipObj1 = {
+            callback: function (val) {  //Mandatory
+              var start = new Date(val);
+              vmDash.dashboard.startDate = changeFormat(start);
+              // Startdt = dateFormat($scope.startDt);
+              // var from = $scope.startDt.split("/");
+              // var f = new Date(from[2], from[1] - 1, from[0]);
+              // console.log(Startdt);
+            },
+            from: new Date(2016, 1, 1),
+            to: new Date(),
+            inputDate: new Date(),
+            mondayFirst: true,
+            disableWeekdays: [],
+            closeOnSelect: false,
+            templateType: 'popup'
+          };
+          ionicDatePicker.openDatePicker(ipObj1);
+        };
+        vmDash.endDatePicker = function() {
+          var from = vmDash.dashboard.startDate.split("/");
+          if(from != ''){
+            var ipObj2 = {
+              callback: function (val) {  //Mandatory
+                var end = new Date(val);
+                vmDash.dashboard.endDate = changeFormat(end);
+
+                // console.log(Startdt);
+              },
+
+              from: new Date(from[2], from[1] - 1, from[0]),
+              to: new Date(),
+              inputDate: new Date(),
+              mondayFirst: true,
+              disableWeekdays: [],
+              closeOnSelect: false,
+              templateType: 'popup'
+            };
+            ionicDatePicker.openDatePicker(ipObj2);
+          }
+          else{
+            console.log('Please select start date.');
+            window.plugins.toast.showWithOptions({
+                     message: 'Please select start date.',
+                     duration: 'long',
+                     position: 'center',
+                     styling: {
+                       borderRadius: 30, // a bit less than default, 0 means a square Toast
+                       backgroundColor: '#CCCCCC', // make sure you use #RRGGBB. Default #333333
+                       alpha: 180, // 0-255, 0 being fully transparent
+                       padding: {
+                         top: 50,
+                         right: 30,
+                         // bottom: 20,
+                         left: 30
+                     }
+                   }
+                 })
+               $timeout(function()
+               {
+               }, 2000);
+          }
+          
+        };
+
+        vmDash.dashboard.showDates = false;
+
+        vmDash.timeOptions = [{id:1, option:"Today Insights"},{id:2, option:"Week Sales"},{id:3, option:"Month Sales"},
+                          {id:4, option:"Year Sales"}, {id:5, option:"Custom Dates"}];
+
+        vmDash.clearStart = function(){
+          vmDash.dashboard.startDate = "";
+          vmDash.dashboard.endDate = "";
+        };
+        vmDash.clearEnd = function(){
+          vmDash.dashboard.endDate = "";
+        };        
+
+        function changeFormat(dt){
+            // var today = new Date();
+            var dd = dt.getDate();
+            var mm = dt.getMonth()+1; //January is 0!
+            var yyyy = dt.getFullYear();
+            if(dd<10){
+              dd='0'+dd
+            }
+            if(mm<10){
+              mm='0'+mm
+            }
+            var today = dd+'/'+mm+'/'+yyyy;
+            return today;
+          };
+      
+        vmDash.getCustomData = function(key, start, end){
+          console.log(key);
+          console.log(start);
+          console.log(end);
+          DashboardData(key, start, end);       
+        };
         
         // vmDash.dashboard.selectedItem = '1';
 
@@ -807,45 +989,6 @@
         vmDash.dashboard.customDates = false;
 
         // console.log(vmDash.dashboard.customDates);
-
-
-        if(userService.getData != "" && userService.getData != undefined){
-          vmDash.dashboard.userData = userService.getData();
-          if(!angular.equals({}, vmDash.dashboard.userData) && vmDash.dashboard.userData != null){
-            $rootScope.firstTime = true;
-          }
-          else{
-            $rootScope.firstTime = false;
-          }          
-          // console.log(vmDash.dashboard.userData);
-          DashboardData(1, '', '');
-          userService.setData(null);
-        }
-
-        var cache = firstTime.get('fTime');
-        if (cache === "true") { // If there’s something in the cache, use it!
-          $scope.variable = true;
-        }
-        else { // Otherwise, let’s generate a new instance
-          firstTime.put('fTime', "true");
-          $scope.variable = false;
-        }
-        if(!$scope.variable && !$rootScope.firstTime && $rootScope.CODE != "false" && !$rootScope.dataStatus){
-          SecurityCodeService.showModal();
-        }
-
-        
-
-
-        vmDash.dashboard.dashData = [];
-
-        if($rootScope.online){
-          DashboardData(1, '', '');  
-        }
-        else{
-          $rootScope.dataStatus = false;
-        }
-
         
 
         function DashboardData(key, start, end){
@@ -1020,7 +1163,7 @@
                       };
                    }
 
-                console.log(vmDash.dashboard.barData);
+                // console.log(vmDash.dashboard.barData);
 
                 
                 vmDash.dashboard.barObject.type = "ColumnChart";
@@ -1120,6 +1263,7 @@
         };        
 
         vmDash.doRefreshData = function() {
+          vmDash.dashboard.selectedItem=1;
            DashboardData(1, '', '');
            $scope.$broadcast('scroll.refreshComplete');
         }; 
@@ -1127,6 +1271,25 @@
         $rootScope.$on('codeChanged', function(event, res) {
           var code = res.data + ".Code";
           LoginService.updateCodeData(code);
+          window.plugins.toast.showWithOptions({
+                        message: 'Code changed successfully',
+                        duration: 'long',
+                        position: 'center',
+                        styling: {
+                          borderRadius: 30, // a bit less than default, 0 means a square Toast
+                          backgroundColor: '#CCCCCC', // make sure you use #RRGGBB. Default #333333
+                          alpha: 180, // 0-255, 0 being fully transparent
+                          padding: {
+                            top: 50,
+                            right: 30,
+                            // bottom: 20,
+                            left: 30
+                        }
+                      }
+                    })
+                  $timeout(function()
+                  {
+                  }, 2000);           
         });  
 
         if(ionic.Platform.isAndroid()){
@@ -1152,87 +1315,12 @@
         for(var i=0; i<currency_symbols.length; i++){
           if(currency_symbols[i].name === $rootScope.Curency){
             vmDash.dashboard.currencyCode = currency_symbols[i].code;
+            return;
           }
           else{
             vmDash.dashboard.currencyCode = currency_symbols[0].code;
           }
-        };        
-
-        vmDash.dashboard.showDates = false;
-
-        vmDash.timeOptions = [{id:1, option:"Today Insights"},{id:2, option:"Week Sales"},{id:3, option:"Month Sales"},
-                          {id:4, option:"Year Sales"}, {id:5, option:"Custom Dates"}];
-
-        vmDash.clearStart = function(){
-          vmDash.dashboard.startDate = "";
-          vmDash.dashboard.endDate = "";
-        };
-        vmDash.clearEnd = function(){
-          vmDash.dashboard.endDate = "";
-        };
-
-        function changeFormat(dt){
-            // var today = new Date();
-            var dd = dt.getDate();
-            var mm = dt.getMonth()+1; //January is 0!
-            var yyyy = dt.getFullYear();
-            if(dd<10){
-              dd='0'+dd
-            }
-            if(mm<10){
-              mm='0'+mm
-            }
-            var today = dd+'/'+mm+'/'+yyyy;
-            return today;
-          };
-
-        vmDash.startDatePicker = function() {
-          var ipObj1 = {
-            callback: function (val) {  //Mandatory
-              var start = new Date(val);
-              vmDash.dashboard.startDate = changeFormat(start);
-              // Startdt = dateFormat($scope.startDt);
-              // var from = $scope.startDt.split("/");
-              // var f = new Date(from[2], from[1] - 1, from[0]);
-              // console.log(Startdt);
-            },
-            from: new Date(2016, 1, 1),
-            to: new Date(),
-            inputDate: new Date(),
-            mondayFirst: true,
-            disableWeekdays: [],
-            closeOnSelect: false,
-            templateType: 'popup'
-          };
-          ionicDatePicker.openDatePicker(ipObj1);
-        };
-        vmDash.endDatePicker = function() {
-          var from = vmDash.dashboard.startDate.split("/");
-          var ipObj2 = {
-            callback: function (val) {  //Mandatory
-              var end = new Date(val);
-              vmDash.dashboard.endDate = changeFormat(end);
-
-              // console.log(Startdt);
-            },
-
-            from: new Date(from[2], from[1] - 1, from[0]),
-            to: new Date(),
-            inputDate: new Date(),
-            mondayFirst: true,
-            disableWeekdays: [],
-            closeOnSelect: false,
-            templateType: 'popup'
-          };
-          ionicDatePicker.openDatePicker(ipObj2);
-        };
-      
-        vmDash.getCustomData = function(key, start, end){
-          console.log(key);
-          console.log(start);
-          console.log(end);
-          DashboardData(key, start, end);       
-        }
+        };            
 
       };
 
@@ -1262,12 +1350,23 @@
 
         vmItem.itemsData.listlength = 10;
 
+        vmItem.clearSearch = function(){
+          vmItem.itemsData.searchText = "";
+        }
+
         vmItem.doRefreshData = function() {
            getItems();
            getMenuTypes();
            getMenuCategory();
            $scope.$broadcast('scroll.refreshComplete');
-        };        
+        };         
+
+        getItems(); 
+        getMenuCategory();     
+
+        $rootScope.$on("SinglePriceData", function() {
+          getItems();
+        }); 
 
         function getItems(){
           // $ionicLoading.show({template : 'Loading...'});
@@ -1319,8 +1418,19 @@
                $ionicLoading.hide();
                $rootScope.$emit('no-data');
           });
-        }
-        getItems();
+        };
+        
+
+        vmItem.loadMore = function(){
+          if (!vmItem.totalItems){
+              $scope.$broadcast('scroll.infiniteScrollComplete');
+              return;
+          }
+          if (vmItem.itemsData.listlength < vmItem.totalItems.length){
+            vmItem.itemsData.listlength+=10;
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          }
+        };
 
         function getMenuTypes(){
           vmItem.menuTypes = [];
@@ -1355,7 +1465,7 @@
             
           })
         };
-        // getMenuCategory();
+        
 
         vmItem.menuTypeChange = function(category_id, sub_id){
           sub_id = "0";
@@ -1386,6 +1496,27 @@
                       vmItem.totalItems[i].mul_price = "Multiple Price";
                     }
                   }
+
+                  for (var i=0; i<vmItem.totalItems.length; i++){
+                    var j,k;
+                      if(i<$rootScope.colors.length){
+                        vmItem.totalItems[i].border_color = $rootScope.colors[i];
+                      }                  
+                      else{
+                        if(i == $rootScope.colors.length){
+                          j=0;
+                          vmItem.totalItems[i].border_color = $rootScope.colors[j];
+                          j++;                      
+                        }
+                        else{                      
+                          vmItem.totalItems[i].border_color = $rootScope.colors[j];
+                          j++;
+                          if(j == $rootScope.colors.length) j=0;
+                        }
+                      }
+                    }
+
+
                 }
                 else{
                   vmItem.totalItems = [];
@@ -1401,10 +1532,12 @@
           }          
         };
 
-        vmItem.menuCategoryChange = function(category_id, sub_id){
+        vmItem.menuCategoryChange = function(sub_id){
           // console.log(category_id);
           // console.log(sub_id);
+          var category_id = 0;
           if(category_id != null || sub_id != null){
+            
             var promise = ItemsService.getItems(category_id, sub_id);
             promise.then(function(data, status, headers, config) {
               // console.log(response.data.item_list);
@@ -1422,6 +1555,26 @@
                       vmItem.totalItems[i].mul_price = "Multiple Price";
                     }
                   }
+
+                  for (var i=0; i<vmItem.totalItems.length; i++){
+                    var j,k;
+                      if(i<$rootScope.colors.length){
+                        vmItem.totalItems[i].border_color = $rootScope.colors[i];
+                      }                  
+                      else{
+                        if(i == $rootScope.colors.length){
+                          j=0;
+                          vmItem.totalItems[i].border_color = $rootScope.colors[j];
+                          j++;                      
+                        }
+                        else{                      
+                          vmItem.totalItems[i].border_color = $rootScope.colors[j];
+                          j++;
+                          if(j == $rootScope.colors.length) j=0;
+                        }
+                      }
+                    }
+
                 }
                 else{
                   vmItem.totalItems = [];
@@ -1541,27 +1694,12 @@
         for(var i=0; i<currency_symbols.length; i++){
           if(currency_symbols[i].name === $rootScope.Curency){
             code = currency_symbols[i].code;
+            return;
           }
           else{
             code = currency_symbols[0].code;
           }
-        };
-        
-
-        $rootScope.$on("SinglePriceData", function() {
-          getItems();
-        })
-
-        vmItem.loadMore = function(){
-          if (!vmItem.totalItems){
-              $scope.$broadcast('scroll.infiniteScrollComplete');
-              return;
-          }
-          if (vmItem.itemsData.listlength < vmItem.totalItems.length){
-            vmItem.itemsData.listlength+=10;
-            $scope.$broadcast('scroll.infiniteScrollComplete');
-          }
-        };
+        };                        
 
         vmItem.clearSearch = function(){
           vmItem.itemsData.searchText = "";
@@ -1590,10 +1728,11 @@
         {"id":2, "name": "Digital Menu", "key": 'digital_img'}];        
 
         singlePrice.stateChanged = function(item){
-          // console.log(singlePrice.picType);
+          console.log(singlePrice.picType);
         }; 
                
         singlePrice.choosePic = function(){
+
           if(ionic.Platform.isIOS()){
              navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 80,
@@ -1618,6 +1757,13 @@
           });
 
           function onSuccess(imageURL) {
+            var aspect = "";
+            if(singlePrice.picType === 'item_img'){
+              aspect = '1/1';
+            }
+            else if(singlePrice.picType === 'digital_img'){
+              aspect = '3/2';              
+            }
             // alert(imageURL);
             if(imageURL == undefined || imageURL == ""){
               var alertPopup = $ionicPopup.alert({
@@ -1632,37 +1778,93 @@
               if(ionic.Platform.isIOS()){
                 
                 if(imageURL.indexOf("file") >= 0){
-                  imageURI = imageURL;                  
-                  var fileName= imageURI.substr(imageURI.lastIndexOf('/') + 1);
-                  var res = imageURI.replace(fileName, "");
-                  var directory = "";
-                  if (cordova.file.documentsDirectory) {
-                    directory = cordova.file.documentsDirectory; // for iOS
+                  imageURI = imageURL;         
+
+
+                  var options = {
+                      url: imageURI,              // required.
+                      ratio: aspect,               // required. (here you can define your custom ration) "1/1" for square images
+                      title: "Crop Image",      // optional. android only. (here you can put title of image cropper activity) default: Image Cropper
+                      autoZoomEnabled: false      // optional. android only. for iOS its always true (if it is true then cropper will automatically adjust the view) default: true
                   }
+                  window.plugins.k.imagecropper.open(options, function(data1) {
+                      // its return an object with the cropped image cached url, cropped width & height, you need to manually delete the image from the application cache.
+                      // alert('Data: '+JSON.stringify(data1));
 
-                  $cordovaFile.checkFile(directory, fileName)
-                    .then(function (success) {
-                      $rootScope.$emit('IOSPicChange1', {data : fileName});
+                      var imgPath = data1.imgPath;               
 
-                      // alert("Success: "+JSON.stringify(success));
-                  }, function (error) {
-                      // alert("Error: "+JSON.stringify(error));
-                      $cordovaFile.copyFile(res, fileName, directory, fileName)
-                      .then(function (success) {
-                        // alert("Copy: "+JSON.stringify(success));
-                        $rootScope.$emit('IOSPicChange1', {data : fileName});
-                        // image.profilePic = fileURI;
+                      var fileName= imgPath.substr(imageURI.lastIndexOf('/') + 1);
+                      var res = imgPath.replace(fileName, "");
+                      var directory = "";
+                      if (cordova.file.documentsDirectory) {
+                        directory = cordova.file.documentsDirectory; // for iOS
+                      }
+
+                      $cordovaFile.checkFile(directory, fileName)
+                        .then(function (success) {
+                          $rootScope.$emit('IOSPicChange1', {data : fileName});
+
+                          // alert("Success: "+JSON.stringify(success));
                       }, function (error) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Error',
-                                template: 'Failed because: ' + JSON.stringify(error),
-                                cssClass: 'Error'
-                              });
-                        // alert("Copy error: "+JSON.stringify(error));
+                          // alert("Error: "+JSON.stringify(error));
+                          $cordovaFile.copyFile(res, fileName, directory, fileName)
+                          .then(function (success) {
+                            // alert("Copy: "+JSON.stringify(success));
+                            $rootScope.$emit('IOSPicChange1', {data : fileName});
+                            // image.profilePic = fileURI;
+                          }, function (error) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                            // alert("Copy error: "+JSON.stringify(error));
+                            // error
+                          });
                         // error
                       });
-                    // error
-                  });
+
+                      // singlePrice.Pic = data;
+                  }, function(error) {
+                      var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                      // alert('Error: '+JSON.stringify(error));
+                  })       
+
+
+                  // var fileName= imageURI.substr(imageURI.lastIndexOf('/') + 1);
+                  // var res = imageURI.replace(fileName, "");
+                  // var directory = "";
+                  // if (cordova.file.documentsDirectory) {
+                  //   directory = cordova.file.documentsDirectory; // for iOS
+                  // }
+
+                  // $cordovaFile.checkFile(directory, fileName)
+                  //   .then(function (success) {
+                  //     $rootScope.$emit('IOSPicChange1', {data : fileName});
+
+                  //     // alert("Success: "+JSON.stringify(success));
+                  // }, function (error) {
+                  //     // alert("Error: "+JSON.stringify(error));
+                  //     $cordovaFile.copyFile(res, fileName, directory, fileName)
+                  //     .then(function (success) {
+                  //       // alert("Copy: "+JSON.stringify(success));
+                  //       $rootScope.$emit('IOSPicChange1', {data : fileName});
+                  //       // image.profilePic = fileURI;
+                  //     }, function (error) {
+                  //           var alertPopup = $ionicPopup.alert({
+                  //               title: 'Error',
+                  //               template: 'Failed because: ' + JSON.stringify(error),
+                  //               cssClass: 'Error'
+                  //             });
+                  //       // alert("Copy error: "+JSON.stringify(error));
+                  //       // error
+                  //     });
+                  //   // error
+                  // });
                   
                 }
                 else{
@@ -1675,43 +1877,104 @@
               }
               else{
                   imageURI = 'file://' + imageURL;  
-                  var options = new FileUploadOptions();
-                  options.fileKey = "file";
-                  options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
-                  options.mimeType = "image/jpeg";
-                  options.params = {}; // if we need to send parameters to the server request
-                  // alert(options.fileName);
-                  var res = imageURI.replace(options.fileName, "");
-                  var directory;
-                  if (cordova.file.documentsDirectory) {
-                    directory = cordova.file.documentsDirectory; // for iOS
-                  } else {
-                    directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+
+                  var options = {
+                      url: imageURI,              // required.
+                      ratio: aspect,               // required. (here you can define your custom ration) "1/1" for square images
+                      title: "Crop Image",      // optional. android only. (here you can put title of image cropper activity) default: Image Cropper
+                      autoZoomEnabled: false      // optional. android only. for iOS its always true (if it is true then cropper will automatically adjust the view) default: true
                   }
+                  window.plugins.k.imagecropper.open(options, function(data1) {
+                      // its return an object with the cropped image cached url, cropped width & height, you need to manually delete the image from the application cache.
+                      // alert('Data: '+JSON.stringify(data1));
 
-                  $cordovaFile.checkFile(directory, options.fileName)
-                    .then(function (success) {
-                      $rootScope.$emit('PicChange1', {data : options.fileName});
+                      var imgPath = data1.imgPath;
 
-                      // alert("Success: "+JSON.stringify(success));
-                  }, function (error) {
-                      // alert("Error: "+JSON.stringify(error));
-                      $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
-                      .then(function (success) {
-                        // alert("Copy: "+JSON.stringify(success));
-                        $rootScope.$emit('PicChange1', {data : options.fileName});
-                        // image.profilePic = fileURI;
+                      var options = new FileUploadOptions();
+                      options.fileKey = "file";
+                      options.fileName = imgPath.substr(imgPath.lastIndexOf('/') + 1);
+                      options.mimeType = "image/jpeg";
+                      options.params = {}; // if we need to send parameters to the server request
+                      // alert(options.fileName);
+                      var res = imgPath.replace(options.fileName, "");
+                      var directory;
+                      if (cordova.file.documentsDirectory) {
+                        directory = cordova.file.documentsDirectory; // for iOS
+                      } else {
+                        directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+                      }
+
+                      $cordovaFile.checkFile(directory, options.fileName)
+                        .then(function (success) {
+                          $rootScope.$emit('PicChange1', {data : options.fileName});
+
+                          // alert("Success: "+JSON.stringify(success));
                       }, function (error) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Error',
-                                template: 'Failed because: ' + JSON.stringify(error),
-                                cssClass: 'Error'
-                              });
-                        // alert("Copy error: "+JSON.stringify(error));
+                          // alert("Error: "+JSON.stringify(error));
+                          $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+                          .then(function (success) {
+                            // alert("Copy: "+JSON.stringify(success));
+                            $rootScope.$emit('PicChange1', {data : options.fileName});
+                            // image.profilePic = fileURI;
+                          }, function (error) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                            // alert("Copy error: "+JSON.stringify(error));
+                            // error
+                          });
                         // error
                       });
-                    // error
-                  });
+
+                      // singlePrice.Pic = data;
+                  }, function(error) {
+                      var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                      // alert('Error: '+JSON.stringify(error));
+                  })                  
+
+                  // var options = new FileUploadOptions();
+                  // options.fileKey = "file";
+                  // options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+                  // options.mimeType = "image/jpeg";
+                  // options.params = {}; // if we need to send parameters to the server request
+                  // // alert(options.fileName);
+                  // var res = imageURI.replace(options.fileName, "");
+                  // var directory;
+                  // if (cordova.file.documentsDirectory) {
+                  //   directory = cordova.file.documentsDirectory; // for iOS
+                  // } else {
+                  //   directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+                  // }
+
+                  // $cordovaFile.checkFile(directory, options.fileName)
+                  //   .then(function (success) {
+                  //     $rootScope.$emit('PicChange1', {data : options.fileName});
+
+                  //     // alert("Success: "+JSON.stringify(success));
+                  // }, function (error) {
+                  //     // alert("Error: "+JSON.stringify(error));
+                  //     $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+                  //     .then(function (success) {
+                  //       // alert("Copy: "+JSON.stringify(success));
+                  //       $rootScope.$emit('PicChange1', {data : options.fileName});
+                  //       // image.profilePic = fileURI;
+                  //     }, function (error) {
+                  //           var alertPopup = $ionicPopup.alert({
+                  //               title: 'Error',
+                  //               template: 'Failed because: ' + JSON.stringify(error),
+                  //               cssClass: 'Error'
+                  //             });
+                  //       // alert("Copy error: "+JSON.stringify(error));
+                  //       // error
+                  //     });
+                  //   // error
+                  // });
                 }              
               }
 
@@ -1740,7 +2003,8 @@
           } else {
             directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
           }
-          singlePrice.Pic = directory+singlePrice.picName;
+          singlePrice.Pic = directory+singlePrice.picName;          
+
           // alert(pic);
           // alert(vmProfile.profilePic);
         });
@@ -1768,6 +2032,14 @@
 
         var retries = 0;
           function onCapturePhoto(fileURI) {
+            var aspect = "";
+            if(singlePrice.picType === 'item_img'){
+              aspect = '1/1';
+            }
+            else if(singlePrice.picType === 'digital_img'){
+              aspect = '3/2';              
+            }
+
             var win = function (r) {
                 clearCache();
                 retries = 0;
@@ -1792,30 +2064,93 @@
                 }
             };
 
-              var options = new FileUploadOptions();
-              options.fileKey = "file";
-              options.fileName = fileURI.substr(fileURI.lastIndexOf('/') + 1);
-              options.mimeType = "image/jpeg";
-              options.params = {}; // if we need to send parameters to the server request
+            var options = {
+                      url: fileURI,              // required.
+                      ratio: aspect,               // required. (here you can define your custom ration) "1/1" for square images
+                      title: "Crop Image",      // optional. android only. (here you can put title of image cropper activity) default: Image Cropper
+                      autoZoomEnabled: false      // optional. android only. for iOS its always true (if it is true then cropper will automatically adjust the view) default: true
+                  }
+                  window.plugins.k.imagecropper.open(options, function(data1) {
+                      // its return an object with the cropped image cached url, cropped width & height, you need to manually delete the image from the application cache.
+                      // alert('Data: '+JSON.stringify(data1));
 
-              var res = fileURI.replace(options.fileName, "");
-              var directory;
-              if (cordova.file.documentsDirectory) {
-                directory = cordova.file.documentsDirectory; // for iOS
-              } else {
-                directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
-              }
+                      var imgPath = data1.imgPath;
 
-              $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
-              .then(function (success) {
-                $rootScope.$emit('PicChange1', {data : options.fileName});
-                // alert(success);
-                // alert("Copy: "+JSON.stringify(success));
-                // alert("File Path: "+fileURI);              
-              }, function (error) {
-                  // alert("Copy error: "+JSON.stringify(error));
-                // error
-              });
+                      var options = new FileUploadOptions();
+                      options.fileKey = "file";
+                      options.fileName = imgPath.substr(imgPath.lastIndexOf('/') + 1);
+                      options.mimeType = "image/jpeg";
+                      options.params = {}; // if we need to send parameters to the server request
+                      // alert(options.fileName);
+                      var res = imgPath.replace(options.fileName, "");
+                      var directory;
+                      if (cordova.file.documentsDirectory) {
+                        directory = cordova.file.documentsDirectory; // for iOS
+                      } else {
+                        directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+                      }
+
+                      $cordovaFile.checkFile(directory, options.fileName)
+                        .then(function (success) {
+                          $rootScope.$emit('PicChange1', {data : options.fileName});
+
+                          // alert("Success: "+JSON.stringify(success));
+                      }, function (error) {
+                          // alert("Error: "+JSON.stringify(error));
+                          $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+                          .then(function (success) {
+                            // alert("Copy: "+JSON.stringify(success));
+                            $rootScope.$emit('PicChange1', {data : options.fileName});
+                            // image.profilePic = fileURI;
+                          }, function (error) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                            // alert("Copy error: "+JSON.stringify(error));
+                            // error
+                          });
+                        // error
+                      });
+
+                      // singlePrice.Pic = data;
+                  }, function(error) {
+                      var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                      // alert('Error: '+JSON.stringify(error));
+                  })       
+
+
+            
+
+              // var options = new FileUploadOptions();
+              // options.fileKey = "file";
+              // options.fileName = fileURI.substr(fileURI.lastIndexOf('/') + 1);
+              // options.mimeType = "image/jpeg";
+              // options.params = {}; // if we need to send parameters to the server request
+
+              // var res = fileURI.replace(options.fileName, "");
+              // var directory;
+              // if (cordova.file.documentsDirectory) {
+              //   directory = cordova.file.documentsDirectory; // for iOS
+              // } else {
+              //   directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+              // }
+
+              // $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+              // .then(function (success) {
+              //   $rootScope.$emit('PicChange1', {data : options.fileName});
+              //   // alert(success);
+              //   // alert("Copy: "+JSON.stringify(success));
+              //   // alert("File Path: "+fileURI);              
+              // }, function (error) {
+              //     // alert("Copy error: "+JSON.stringify(error));
+              //   // error
+              // });
           };
           function onFail(message) {
             var alertPopup = $ionicPopup.alert({
@@ -1902,7 +2237,7 @@
                    $ionicLoading.hide();
                    var alertPopup = $ionicPopup.alert({
                        title: 'Success',
-                       template: 'Profile Updated Successfully',
+                       template: 'Updated Successfully',
                        cssClass: 'Success'
                    });
                    alertPopup.then(function(res) {
@@ -1914,7 +2249,7 @@
                     $ionicLoading.hide();
                     var alertPopup = $ionicPopup.alert({
                         title: 'Error',
-                        template: 'Unable to upload, something went wrong...',
+                        template: 'Unable to upload, try later...',
                         cssClass: 'Error'
                     });
                     alertPopup.then(function(res) {
@@ -1997,7 +2332,7 @@
         {"id":2, "name": "Digital Menu", "key": 'digital_img'}];        
 
         multiPrice.stateChanged = function(item){
-          // console.log(singlePrice.picType);
+          console.log(multiPrice.picType);
         };
 
         multiPrice.defaultPic = "img/icons/blackBackgroundSwitchOff.png";
@@ -2009,10 +2344,10 @@
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
                 destinationType: Camera.DestinationType.NATIVE_URI,
                 mediaType: Camera.MediaType.ALLMEDIA,
-                encodingType: Camera.EncodingType.JPEG
+                encodingType: Camera.EncodingType.JPEG,
                 // popoverOptions: new CameraPopoverOptions(300, 300, 100, 100, Camera.PopoverArrowDirection.ARROW_ANY)
-                // targetWidth: 900,
-                // targetHeight: 900
+                targetWidth: 900,
+                targetHeight: 900
             });
           }
           navigator.camera.getPicture(onSuccess, onFail, {
@@ -2020,13 +2355,22 @@
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
                 destinationType: Camera.DestinationType.FILE_URI,
                 mediaType: Camera.MediaType.ALLMEDIA,
-                encodingType: Camera.EncodingType.JPEG
+                encodingType: Camera.EncodingType.JPEG,
                 // popoverOptions: new CameraPopoverOptions(300, 300, 100, 100, Camera.PopoverArrowDirection.ARROW_ANY)
-                // targetWidth: 900,
-                // targetHeight: 900
+                targetWidth: 900,
+                targetHeight: 900
           });
 
           function onSuccess(imageURL) {
+
+            var aspect = "";
+            if(multiPrice.picType === 'item_img'){
+              aspect = '1/1';
+            }
+            else if(multiPrice.picType === 'digital_img'){
+              aspect = '3/2';              
+            }
+
             // alert(imageURL);
             if(imageURL == undefined || imageURL == ""){
               var alertPopup = $ionicPopup.alert({
@@ -2041,37 +2385,93 @@
               if(ionic.Platform.isIOS()){
                 
                 if(imageURL.indexOf("file") >= 0){
-                  imageURI = imageURL;                  
-                  var fileName= imageURI.substr(imageURI.lastIndexOf('/') + 1);
-                  var res = imageURI.replace(fileName, "");
-                  var directory = "";
-                  if (cordova.file.documentsDirectory) {
-                    directory = cordova.file.documentsDirectory; // for iOS
+                  imageURI = imageURL;   
+
+
+                  var options = {
+                      url: imageURI,              // required.
+                      ratio: aspect,               // required. (here you can define your custom ration) "1/1" for square images
+                      title: "Crop Image",      // optional. android only. (here you can put title of image cropper activity) default: Image Cropper
+                      autoZoomEnabled: false      // optional. android only. for iOS its always true (if it is true then cropper will automatically adjust the view) default: true
                   }
+                  window.plugins.k.imagecropper.open(options, function(data1) {
+                      // its return an object with the cropped image cached url, cropped width & height, you need to manually delete the image from the application cache.
+                      // alert('Data: '+JSON.stringify(data1));
 
-                  $cordovaFile.checkFile(directory, fileName)
-                    .then(function (success) {
-                      $rootScope.$emit('IOSPicChange2', {data : fileName});
+                      var imgPath = data1.imgPath;               
 
-                      // alert("Success: "+JSON.stringify(success));
-                  }, function (error) {
-                      // alert("Error: "+JSON.stringify(error));
-                      $cordovaFile.copyFile(res, fileName, directory, fileName)
-                      .then(function (success) {
-                        // alert("Copy: "+JSON.stringify(success));
-                        $rootScope.$emit('IOSPicChange2', {data : fileName});
-                        // image.profilePic = fileURI;
+                      var fileName= imgPath.substr(imageURI.lastIndexOf('/') + 1);
+                      var res = imgPath.replace(fileName, "");
+                      var directory = "";
+                      if (cordova.file.documentsDirectory) {
+                        directory = cordova.file.documentsDirectory; // for iOS
+                      }
+
+                      $cordovaFile.checkFile(directory, fileName)
+                        .then(function (success) {
+                          $rootScope.$emit('IOSPicChange2', {data : fileName});
+
+                          // alert("Success: "+JSON.stringify(success));
                       }, function (error) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Error',
-                                template: 'Failed because: ' + JSON.stringify(error),
-                                cssClass: 'Error'
-                              });
-                        // alert("Copy error: "+JSON.stringify(error));
+                          // alert("Error: "+JSON.stringify(error));
+                          $cordovaFile.copyFile(res, fileName, directory, fileName)
+                          .then(function (success) {
+                            // alert("Copy: "+JSON.stringify(success));
+                            $rootScope.$emit('IOSPicChange2', {data : fileName});
+                            // image.profilePic = fileURI;
+                          }, function (error) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                            // alert("Copy error: "+JSON.stringify(error));
+                            // error
+                          });
                         // error
                       });
-                    // error
-                  });
+
+                      // singlePrice.Pic = data;
+                  }, function(error) {
+                      var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                      // alert('Error: '+JSON.stringify(error));
+                  }) 
+
+
+                  // var fileName= imageURI.substr(imageURI.lastIndexOf('/') + 1);
+                  // var res = imageURI.replace(fileName, "");
+                  // var directory = "";
+                  // if (cordova.file.documentsDirectory) {
+                  //   directory = cordova.file.documentsDirectory; // for iOS
+                  // }
+
+                  // $cordovaFile.checkFile(directory, fileName)
+                  //   .then(function (success) {
+                  //     $rootScope.$emit('IOSPicChange2', {data : fileName});
+
+                  //     // alert("Success: "+JSON.stringify(success));
+                  // }, function (error) {
+                  //     // alert("Error: "+JSON.stringify(error));
+                  //     $cordovaFile.copyFile(res, fileName, directory, fileName)
+                  //     .then(function (success) {
+                  //       // alert("Copy: "+JSON.stringify(success));
+                  //       $rootScope.$emit('IOSPicChange2', {data : fileName});
+                  //       // image.profilePic = fileURI;
+                  //     }, function (error) {
+                  //           var alertPopup = $ionicPopup.alert({
+                  //               title: 'Error',
+                  //               template: 'Failed because: ' + JSON.stringify(error),
+                  //               cssClass: 'Error'
+                  //             });
+                  //       // alert("Copy error: "+JSON.stringify(error));
+                  //       // error
+                  //     });
+                  //   // error
+                  // });
                   
                 }
                 else{
@@ -2084,43 +2484,106 @@
               }
               else{
                   imageURI = 'file://' + imageURL;  
-                  var options = new FileUploadOptions();
-                  options.fileKey = "file";
-                  options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
-                  options.mimeType = "image/jpeg";
-                  options.params = {}; // if we need to send parameters to the server request
-                  // alert(options.fileName);
-                  var res = imageURI.replace(options.fileName, "");
-                  var directory;
-                  if (cordova.file.documentsDirectory) {
-                    directory = cordova.file.documentsDirectory; // for iOS
-                  } else {
-                    directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+
+                  var options = {
+                      url: imageURI,              // required.
+                      ratio: aspect,               // required. (here you can define your custom ration) "1/1" for square images
+                      title: "Crop Image",      // optional. android only. (here you can put title of image cropper activity) default: Image Cropper
+                      autoZoomEnabled: false      // optional. android only. for iOS its always true (if it is true then cropper will automatically adjust the view) default: true
                   }
+                  window.plugins.k.imagecropper.open(options, function(data1) {
+                      // its return an object with the cropped image cached url, cropped width & height, you need to manually delete the image from the application cache.
+                      // alert('Data: '+JSON.stringify(data1));
 
-                  $cordovaFile.checkFile(directory, options.fileName)
-                    .then(function (success) {
-                      $rootScope.$emit('PicChange2', {data : options.fileName});
+                      var imgPath = data1.imgPath;
 
-                      // alert("Success: "+JSON.stringify(success));
-                  }, function (error) {
-                      // alert("Error: "+JSON.stringify(error));
-                      $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
-                      .then(function (success) {
-                        // alert("Copy: "+JSON.stringify(success));
-                        $rootScope.$emit('PicChange2', {data : options.fileName});
-                        // image.profilePic = fileURI;
+                      var options = new FileUploadOptions();
+                      options.fileKey = "file";
+                      options.fileName = imgPath.substr(imgPath.lastIndexOf('/') + 1);
+                      options.mimeType = "image/jpeg";
+                      options.params = {}; // if we need to send parameters to the server request
+                      // alert(options.fileName);
+                      var res = imgPath.replace(options.fileName, "");
+                      var directory;
+                      if (cordova.file.documentsDirectory) {
+                        directory = cordova.file.documentsDirectory; // for iOS
+                      } else {
+                        directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+                      }
+
+                      $cordovaFile.checkFile(directory, options.fileName)
+                        .then(function (success) {
+                          $rootScope.$emit('PicChange2', {data : options.fileName});
+
+                          // alert("Success: "+JSON.stringify(success));
                       }, function (error) {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Error',
-                                template: 'Failed because: ' + JSON.stringify(error),
-                                cssClass: 'Error'
-                              });
-                        // alert("Copy error: "+JSON.stringify(error));
+                          // alert("Error: "+JSON.stringify(error));
+                          $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+                          .then(function (success) {
+                            // alert("Copy: "+JSON.stringify(success));
+                            $rootScope.$emit('PicChange2', {data : options.fileName});
+                            // image.profilePic = fileURI;
+                          }, function (error) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                            // alert("Copy error: "+JSON.stringify(error));
+                            // error
+                          });
                         // error
                       });
-                    // error
-                  });
+
+                      // singlePrice.Pic = data;
+                  }, function(error) {
+                      var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                      // alert('Error: '+JSON.stringify(error));
+                  })    
+
+
+
+                  // var options = new FileUploadOptions();
+                  // options.fileKey = "file";
+                  // options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+                  // options.mimeType = "image/jpeg";
+                  // options.params = {}; // if we need to send parameters to the server request
+                  // // alert(options.fileName);
+                  // var res = imageURI.replace(options.fileName, "");
+                  // var directory;
+                  // if (cordova.file.documentsDirectory) {
+                  //   directory = cordova.file.documentsDirectory; // for iOS
+                  // } else {
+                  //   directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+                  // }
+
+                  // $cordovaFile.checkFile(directory, options.fileName)
+                  //   .then(function (success) {
+                  //     $rootScope.$emit('PicChange2', {data : options.fileName});
+
+                  //     // alert("Success: "+JSON.stringify(success));
+                  // }, function (error) {
+                  //     // alert("Error: "+JSON.stringify(error));
+                  //     $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+                  //     .then(function (success) {
+                  //       // alert("Copy: "+JSON.stringify(success));
+                  //       $rootScope.$emit('PicChange2', {data : options.fileName});
+                  //       // image.profilePic = fileURI;
+                  //     }, function (error) {
+                  //           var alertPopup = $ionicPopup.alert({
+                  //               title: 'Error',
+                  //               template: 'Failed because: ' + JSON.stringify(error),
+                  //               cssClass: 'Error'
+                  //             });
+                  //       // alert("Copy error: "+JSON.stringify(error));
+                  //       // error
+                  //     });
+                  //   // error
+                  // });
                 }              
               }
 
@@ -2175,6 +2638,13 @@
 
         var retries = 0;
           function onCapturePhoto(fileURI) {
+            var aspect = "";
+            if(multiPrice.picType === 'item_img'){
+              aspect = '1/1';
+            }
+            else if(multiPrice.picType === 'digital_img'){
+              aspect = '3/2';              
+            }
             var win = function (r) {
                 clearCache();
                 retries = 0;
@@ -2199,30 +2669,93 @@
                 }
             };
 
-              var options = new FileUploadOptions();
-              options.fileKey = "file";
-              options.fileName = fileURI.substr(fileURI.lastIndexOf('/') + 1);
-              options.mimeType = "image/jpeg";
-              options.params = {}; // if we need to send parameters to the server request
 
-              var res = fileURI.replace(options.fileName, "");
-              var directory;
-              if (cordova.file.documentsDirectory) {
-                directory = cordova.file.documentsDirectory; // for iOS
-              } else {
-                directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
-              }
+            var options = {
+                      url: fileURI,              // required.
+                      ratio: aspect,               // required. (here you can define your custom ration) "1/1" for square images
+                      title: "Crop Image",      // optional. android only. (here you can put title of image cropper activity) default: Image Cropper
+                      autoZoomEnabled: false      // optional. android only. for iOS its always true (if it is true then cropper will automatically adjust the view) default: true
+                  }
+                  window.plugins.k.imagecropper.open(options, function(data1) {
+                      // its return an object with the cropped image cached url, cropped width & height, you need to manually delete the image from the application cache.
+                      // alert('Data: '+JSON.stringify(data1));
 
-              $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
-              .then(function (success) {
-                $rootScope.$emit('PicChange2', {data : options.fileName});
-                // alert(success);
-                // alert("Copy: "+JSON.stringify(success));
-                // alert("File Path: "+fileURI);              
-              }, function (error) {
-                  // alert("Copy error: "+JSON.stringify(error));
-                // error
-              });
+                      var imgPath = data1.imgPath;
+
+                      var options = new FileUploadOptions();
+                      options.fileKey = "file";
+                      options.fileName = imgPath.substr(imgPath.lastIndexOf('/') + 1);
+                      options.mimeType = "image/jpeg";
+                      options.params = {}; // if we need to send parameters to the server request
+                      // alert(options.fileName);
+                      var res = imgPath.replace(options.fileName, "");
+                      var directory;
+                      if (cordova.file.documentsDirectory) {
+                        directory = cordova.file.documentsDirectory; // for iOS
+                      } else {
+                        directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+                      }
+
+                      $cordovaFile.checkFile(directory, options.fileName)
+                        .then(function (success) {
+                          $rootScope.$emit('PicChange2', {data : options.fileName});
+
+                          // alert("Success: "+JSON.stringify(success));
+                      }, function (error) {
+                          // alert("Error: "+JSON.stringify(error));
+                          $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+                          .then(function (success) {
+                            // alert("Copy: "+JSON.stringify(success));
+                            $rootScope.$emit('PicChange2', {data : options.fileName});
+                            // image.profilePic = fileURI;
+                          }, function (error) {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                            // alert("Copy error: "+JSON.stringify(error));
+                            // error
+                          });
+                        // error
+                      });
+
+                      // singlePrice.Pic = data;
+                  }, function(error) {
+                      var alertPopup = $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: 'Failed because: ' + JSON.stringify(error),
+                                    cssClass: 'Error'
+                                  });
+                      // alert('Error: '+JSON.stringify(error));
+                  }) 
+
+
+              // var options = new FileUploadOptions();
+              // options.fileKey = "file";
+              // options.fileName = fileURI.substr(fileURI.lastIndexOf('/') + 1);
+              // options.mimeType = "image/jpeg";
+              // options.params = {}; // if we need to send parameters to the server request
+
+              // var res = fileURI.replace(options.fileName, "");
+              // var directory;
+              // if (cordova.file.documentsDirectory) {
+              //   directory = cordova.file.documentsDirectory; // for iOS
+              // } else {
+              //   directory = cordova.file.externalRootDirectory+"eposhybrid/Pics/"; // for Android
+              // }
+
+              // $cordovaFile.copyFile(res, options.fileName, directory, options.fileName)
+              // .then(function (success) {
+              //   $rootScope.$emit('PicChange2', {data : options.fileName});
+              //   // alert(success);
+              //   // alert("Copy: "+JSON.stringify(success));
+              //   // alert("File Path: "+fileURI);              
+              // }, function (error) {
+              //     // alert("Copy error: "+JSON.stringify(error));
+              //   // error
+              // });
+
           };
           function onFail(message) {
             var alertPopup = $ionicPopup.alert({
@@ -2338,7 +2871,7 @@
           else{
           $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
           var item_data = {app_key: $rootScope.AppKey, item_id: multiPrice.itemInfo.item_id, multiple_sizeprice: multiPrice.multiItem}; 
-          console.log(item_data);
+          // console.log(JSON.stringify(item_data));
               ItemsService.updateMultiplePrice(item_data).then(function(data, status, headers, config){
                 // console.log(res);
                 if(data.status){
@@ -2388,12 +2921,183 @@
       function PromotionCtrl($scope, $rootScope, userService, $ionicPopup, PromotionService, PromotionEditService, $ionicLoading){
         var vmPromotion = this;
 
-        vmPromotion.listlength = 10;
+        getPromotions();
+        getPromotionTypes();
+
+        vmPromotion.loadMore = function(){
+          if (!vmPromotion.totalPromotions){
+              $scope.$broadcast('scroll.infiniteScrollComplete');
+              return;
+          }
+          if (vmPromotion.listlength < vmPromotion.totalPromotions.length){
+            vmPromotion.listlength+=10;
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+          }
+        };
+
+        $rootScope.$on("UpdatePromData", function() {
+          getPromotions();
+        });
 
         vmPromotion.doRefreshData = function() {
            getPromotions();
            $scope.$broadcast('scroll.refreshComplete');
+        };   
+
+        vmPromotion.clearSearch = function(){
+          vmPromotion.searchText = "";
         };
+
+        vmPromotion.listlength = 10;
+
+        function getPromotionTypes(){        
+          PromotionService.promotionTypes().then(function(data, status, headers, config){            
+            var response = data.data;
+            if(data.status){
+              vmPromotion.promotionTypes = response.promotion_type;
+              var item = {type_id:"0", promotion_type:"All"};
+              vmPromotion.promotionTypes.splice(0, 0, item);
+              vmPromotion.promotionType='0';
+            }
+            else{
+              $rootScope.$emit('no-data');
+            }
+            
+          })
+        };
+        
+
+        vmPromotion.promotionTypeChange = function(type_id){
+          if(type_id != null){
+            vmPromotion.totalPromotions = [];
+            $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
+            var promise = PromotionService.getPromotions(type_id);
+            promise.then(function(data, status, headers, config) {
+              $ionicLoading.hide();         
+              var response = data.data.data;
+              // console.log(response);
+              if(data.data.status){                
+                if(response.promotion_list){
+                  $ionicLoading.hide();
+              vmPromotion.totalPromotions = response.promotion_list;      
+              for(var i=0; i<vmPromotion.totalPromotions.length; i++){
+                if(vmPromotion.totalPromotions[i].discount_type === 1){
+                  vmPromotion.totalPromotions[i].percent = "";
+                  vmPromotion.totalPromotions[i].symbol = code;
+                  vmPromotion.totalPromotions[i].amount_type = true;
+                }
+                else if(vmPromotion.totalPromotions[i].discount_type === 2){
+                  vmPromotion.totalPromotions[i].percent = "%";
+                  vmPromotion.totalPromotions[i].percent_type = true;
+
+                  // vmPromotion.totalPromotions[i].symbol = "";
+                }else{
+                  vmPromotion.totalPromotions[i].symbol = code;
+                  // vmPromotion.totalPromotions[i].amount = "";
+                  vmPromotion.totalPromotions[i].amount_type = true;
+                  vmPromotion.totalPromotions[i].percent = "";
+                }
+                if(vmPromotion.totalPromotions[i].promotion_category === null){
+                  vmPromotion.totalPromotions[i].promotion_category = "---";
+                }
+              }
+
+              for (var i=0; i<vmPromotion.totalPromotions.length; i++){
+                var j,k;
+                  if(i<$rootScope.colors.length){
+                    vmPromotion.totalPromotions[i].border_color = $rootScope.colors[i];
+                  }                  
+                  else{
+                    if(i == $rootScope.colors.length){
+                      j=0;
+                      vmPromotion.totalPromotions[i].border_color = $rootScope.colors[j];
+                      j++;                      
+                    }
+                    else{                      
+                      vmPromotion.totalPromotions[i].border_color = $rootScope.colors[j];
+                      j++;
+                      if(j == $rootScope.colors.length) j=0;
+                    }
+                  }
+                }
+
+                }
+                else{
+                  vmItem.totalItems = [];
+                }
+                
+              }
+              else{
+                $rootScope.$emit('no-data');
+              }                         
+            }, function(data, status, headers, config) {
+                  $rootScope.$emit('no-data');
+            });
+          } 
+        };
+
+        function getPromotions(){
+          $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
+          vmPromotion.totalPromotions = [];
+          var promise = PromotionService.getPromotions();
+          promise.then(function(data, status, headers, config) {
+            var response = data.data.data;
+            console.log(response);
+            if(data.data.status){
+              $ionicLoading.hide();
+              vmPromotion.totalPromotions = response.promotion_list;      
+              for(var i=0; i<vmPromotion.totalPromotions.length; i++){
+                if(vmPromotion.totalPromotions[i].discount_type === 1){
+                  vmPromotion.totalPromotions[i].percent = "";
+                  vmPromotion.totalPromotions[i].symbol = vmPromotion.code;
+                  vmPromotion.totalPromotions[i].amount_type = true;
+                }
+                else if(vmPromotion.totalPromotions[i].discount_type === 2){
+                  vmPromotion.totalPromotions[i].percent = "%";
+                  vmPromotion.totalPromotions[i].percent_type = true;
+
+                  // vmPromotion.totalPromotions[i].symbol = "";
+                }else{
+                  vmPromotion.totalPromotions[i].symbol = vmPromotion.code;
+                  // vmPromotion.totalPromotions[i].amount = "";
+                  vmPromotion.totalPromotions[i].amount_type = true;
+                  vmPromotion.totalPromotions[i].percent = "";
+                }
+                if(vmPromotion.totalPromotions[i].promotion_category === null){
+                  vmPromotion.totalPromotions[i].promotion_category = "---";
+                }
+              }
+
+              for (var i=0; i<vmPromotion.totalPromotions.length; i++){
+                var j,k;
+                  if(i<$rootScope.colors.length){
+                    vmPromotion.totalPromotions[i].border_color = $rootScope.colors[i];
+                  }                  
+                  else{
+                    if(i == $rootScope.colors.length){
+                      j=0;
+                      vmPromotion.totalPromotions[i].border_color = $rootScope.colors[j];
+                      j++;                      
+                    }
+                    else{                      
+                      vmPromotion.totalPromotions[i].border_color = $rootScope.colors[j];
+                      j++;
+                      if(j == $rootScope.colors.length) j=0;
+                    }
+                  }
+                }
+            }
+            else{
+              $ionicLoading.hide();
+              $rootScope.$emit('no-data');
+            }
+            
+          }, function(data, status, headers, config) {
+               $ionicLoading.hide();
+               $rootScope.$emit('no-data');
+          });
+        
+        };            
 
         vmPromotion.changePricing = function(item){
             // console.log(item);
@@ -2459,95 +3163,17 @@
 
         };
 
-        var code = "";
+        // var code = "";
         for(var i=0; i<currency_symbols.length; i++){
           if(currency_symbols[i].name === $rootScope.Curency){
-            code = currency_symbols[i].code;
+            vmPromotion.code = currency_symbols[i].code;
+            return;
           }
           else{
-            code = currency_symbols[0].code;
+            vmPromotion.code = currency_symbols[0].code;
           }
         };
-        
-
-        $rootScope.$on("UpdatePromData", function() {
-          getPromotions();
-        });
-
-        function getPromotions(){
-          // $ionicLoading.show({template : 'Loading...'});
-          $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
-          vmPromotion.totalItems = [];
-          var promise = PromotionService.getPromotions();
-          promise.then(function(data, status, headers, config) {
-            var response = data.data.data;
-            
-            if(data.data.status){
-              $ionicLoading.hide();
-              vmPromotion.totalPromotions = response.promotion_list;      
-              for(var i=0; i<vmPromotion.totalPromotions.length; i++){
-                if(vmPromotion.totalPromotions[i].discount_type === 1){
-                  vmPromotion.totalPromotions[i].percent = "";
-                  vmPromotion.totalPromotions[i].symbol = code;
-                  vmPromotion.totalPromotions[i].amount_type = true;
-                }
-                else if(vmPromotion.totalPromotions[i].discount_type === 2){
-                  vmPromotion.totalPromotions[i].percent = "%";
-                  vmPromotion.totalPromotions[i].percent_type = true;
-
-                  // vmPromotion.totalPromotions[i].symbol = "";
-                }else{
-                  vmPromotion.totalPromotions[i].symbol = code;
-                  // vmPromotion.totalPromotions[i].amount = "";
-                  vmPromotion.totalPromotions[i].amount_type = true;
-                  vmPromotion.totalPromotions[i].percent = "";
-                }
-                if(vmPromotion.totalPromotions[i].promotion_category === null){
-                  vmPromotion.totalPromotions[i].promotion_category = "---";
-                }
-              }
-
-              for (var i=0; i<vmPromotion.totalPromotions.length; i++){
-                var j,k;
-                  if(i<$rootScope.colors.length){
-                    vmPromotion.totalPromotions[i].border_color = $rootScope.colors[i];
-                  }                  
-                  else{
-                    if(i == $rootScope.colors.length){
-                      j=0;
-                      vmPromotion.totalPromotions[i].border_color = $rootScope.colors[j];
-                      j++;                      
-                    }
-                    else{                      
-                      vmPromotion.totalPromotions[i].border_color = $rootScope.colors[j];
-                      j++;
-                      if(j == $rootScope.colors.length) j=0;
-                    }
-                  }
-                }
-            }
-            else{
-              $ionicLoading.hide();
-              $rootScope.$emit('no-data');
-            }
-            
-          }, function(data, status, headers, config) {
-               $ionicLoading.hide();
-               $rootScope.$emit('no-data');
-          });
-        }
-        getPromotions();
-
-        vmPromotion.loadMore = function(){
-          if (!vmPromotion.totalItems){
-              $scope.$broadcast('scroll.infiniteScrollComplete');
-              return;
-          }
-          if (vmPromotion.listlength < vmPromotion.totalItems.length){
-            vmPromotion.listlength+=10;
-            $scope.$broadcast('scroll.infiniteScrollComplete');
-          }
-        };
+                
 
         vmPromotion.clearSearch = function(){
           vmPromotion.searchText = "";
@@ -2560,29 +3186,31 @@
 
         vmEditProm.selectOptions = [{"id":1, "name": "Amount"},{"id":2, "name": "Percent"},{"id":3, "name": "Free"}]
 
-        vmEditProm.promItem ={};
+        vmEditProm.promItem ={};        
+        vmEditProm.promItem.checkMin = true; 
 
-        
+        vmEditProm.closeModal = function(){
+          PromotionEditService.hideModal();
+        };              
 
-        if(userService.getData() != ""){
-          vmEditProm.promInfo = userService.getData();
-          // console.log(vmEditProm.promInfo);
-          if(vmEditProm.promInfo.promotion_type_id == "1" || vmEditProm.promInfo.promotion_type_id == "9"){
-            vmEditProm.selectOptions = [{"id":1, "name": "Amount"},{"id":2, "name": "Percent"},{"id":3, "name": "Free"}];
-            vmEditProm.promItem.selectDiscount = vmEditProm.promInfo.discount_type;
+        vmEditProm.checkMinBill = function(amount){
+          console.log(amount);
+          if(amount > parseInt(vmEditProm.promInfo.on_minimum_bill)){
+            console.log('Dont allow');
+            vmEditProm.promItem.checkMin = false;
           }
           else{
-            vmEditProm.selectOptions = [{"id":1, "name": "Amount"},{"id":2, "name": "Percent"}]
-            vmEditProm.promItem.selectDiscount = vmEditProm.promInfo.discount_type;
+            vmEditProm.promItem.checkMin = true;            
+            console.log('allow');
           }
-          if(vmEditProm.promItem.selectDiscount == 1){
-            vmEditProm.promItem.amountVal = vmEditProm.promInfo.discount_amount;
+        };        
+
+        vmEditProm.checkDiscount = function(item){
+          console.log(item);
+          if(item.id != 1){
+            vmEditProm.promItem.checkMin = true;  
           }
-          else if(vmEditProm.promItem.selectDiscount == 2){
-            vmEditProm.promItem.percentVal = vmEditProm.promInfo.discount_amount;
-          }
-          userService.setData(null);
-        }
+        };
 
         var prom_data = {};
 
@@ -2590,6 +3218,12 @@
             // console.log(vmEditProm.promItem);
             $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
             if(vmEditProm.promItem.selectDiscount == 1){
+              if(vmEditProm.promItem.amountVal > parseInt(vmEditProm.promInfo.on_minimum_bill)){
+                console.log('Dont allow');
+                vmEditProm.promItem.checkMin = false;
+                $ionicLoading.hide();
+                return;
+              }
               prom_data = {app_key: $rootScope.AppKey, promotion_id:vmEditProm.promInfo.promotion_id, discount_type: vmEditProm.promItem.selectDiscount, discount_amount: vmEditProm.promItem.amountVal};
             }
             else if(vmEditProm.promItem.selectDiscount == 2){
@@ -2634,20 +3268,51 @@
                     PromotionEditService.hideModal();
                 });
             })
-        };
+        };  
 
-        vmEditProm.closeModal = function(){
-          PromotionEditService.hideModal();
-        };
+        if(userService.getData() != ""){
+          vmEditProm.promInfo = userService.getData();
+          console.log(vmEditProm.promInfo);
+          if(vmEditProm.promInfo.promotion_type_id == "1" || vmEditProm.promInfo.promotion_type_id == "9"){
+            vmEditProm.selectOptions = [{"id":1, "name": "Amount"},{"id":2, "name": "Percent"},{"id":3, "name": "Free"}];
+            vmEditProm.promItem.selectDiscount = vmEditProm.promInfo.discount_type;
+          }
+          else{
+            vmEditProm.selectOptions = [{"id":1, "name": "Amount"},{"id":2, "name": "Percent"}]
+            vmEditProm.promItem.selectDiscount = vmEditProm.promInfo.discount_type;
+          }
+          if(vmEditProm.promItem.selectDiscount == 1){
+            vmEditProm.promItem.amountVal = vmEditProm.promInfo.discount_amount;
+          }
+          else if(vmEditProm.promItem.selectDiscount == 2){
+            vmEditProm.promItem.percentVal = vmEditProm.promInfo.discount_amount;
+          }
+          userService.setData(null);
+        }
 
+        for(var i=0; i<currency_symbols.length; i++){
+          if(currency_symbols[i].name === $rootScope.Curency){
+            vmEditProm.promItem.code = currency_symbols[i].code;
+            return;
+          }
+          else{
+            vmEditProm.promItem.code = currency_symbols[0].code;
+          }
+        }; 
+
+              
 
       };
 
-      function StaffManagementCtrl($scope, $state, $ionicLoading, StaffService){
+      function StaffManagementCtrl($scope, $state, $ionicLoading, StaffService, todayRotaModalService){
         var vmStaffManagement = this;
 
         vmStaffManagement.loadTodayStaff = function(){
           $state.go('app.staff-management.todayStaff', {}, {reload: true});
+        };
+        vmStaffManagement.TodayRota = function(){
+          todayRotaModalService.showModal();
+          // $state.go('app.todayRota', {}, {reload: true});
         };
         vmStaffManagement.loadAllStaff = function(){
           $state.go('app.staff-management.allStaff', {}, {reload: true});
@@ -2664,7 +3329,7 @@
             getTodaysList();
         });
 
-
+        getTodaysList();
 
         todayS.doRefreshData = function() {
            getTodaysList();
@@ -2681,6 +3346,7 @@
           promise.then(function(data, status, headers, config) {
             
             var response = data.data.data;
+            // console.log(response);
             if(data.data.status){
               $ionicLoading.hide();
               todayS.todayStaffList = response.today_staff;
@@ -2723,7 +3389,213 @@
                $rootScope.$emit('no-data');
           });
         };
-        getTodaysList();
+        
+      };
+
+      function todayRotaCtrl($scope, $rootScope, $ionicLoading, StaffService, userService, 
+        addRotaModalService, $ionicPopup, $ionicSideMenuDelegate, todayRotaModalService){
+
+        var todayR = this;
+        todayR.data = {};
+        $ionicSideMenuDelegate.canDragContent(false);        
+
+        todayR.activeTab = 1;
+        todayR.todayRota = true;
+        todayR.tommRota = false; 
+
+        getTodayRota();               
+
+        todayR.noRota = false;      
+
+        // $scope.$on("$ionicSlides.slideChangeStart", function(event, data){
+        //   console.log(data.slider.activeIndex);          
+        // });
+
+        // $scope.$on("$ionicSlides.slideChangeEnd", function(event, data){
+        //   // note: the indexes are 0-based
+        //   $scope.activeIndex = data.slider.activeIndex;
+        //   $scope.previousIndex = data.slider.previousIndex;
+        // });
+
+        function getTodayRota(){
+              $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
+              todayR.todayRotaList = [];
+              var promise = StaffService.getTodayRota();
+              promise.then(function(data, status, headers, config) {
+                var response = data.data;
+                if(data.data.status){
+                  $ionicLoading.hide();
+                  todayR.todayRotaList = response.data;
+                  console.log(response.data);  
+                  // return;          
+                  if(todayR.todayRotaList.length >0){ 
+                    for (var i=0; i<todayR.todayRotaList.length; i++){
+                      if(todayR.todayRotaList[i].status){
+                        // console.log('hi');                      
+                      }
+                      else if(!todayR.todayRotaList[i].status && todayR.todayRotaList[i].msg_code === 1){
+                        // console.log(todayR.todayRotaList[i].data);
+                        todayR.noRota = true;
+                      }
+                    }            
+                  }                            
+                }
+                else{
+                   $ionicLoading.hide();
+                   $rootScope.$emit('no-data');
+                }
+
+              }, function(data, status, headers, config) {
+                   $ionicLoading.hide();
+                   $rootScope.$emit('no-data');
+              });
+            };
+
+        function changeFormat(dt){
+            // var today = new Date();
+            var dd = dt.getDate();
+            var mm = dt.getMonth()+1; //January is 0!
+            var yyyy = dt.getFullYear();
+            if(dd<10){
+              dd='0'+dd
+            }
+            if(mm<10){
+              mm='0'+mm
+            }
+            var today = dd+'/'+mm+'/'+yyyy;
+            return today;
+        };                  
+
+        todayR.AddRota = function(date, item){
+          // console.log(item);
+          if(date === 'Today' || date === 'TODAY'){
+            var dt = new Date();
+            date = changeFormat(dt);
+          }          
+          // console.log(date);          
+          // return;
+          var addRotaData = {
+            staff_id : item.staff_id,
+            date : date,
+            name : item.name,
+            status : true
+          }
+          userService.setData(addRotaData);
+          addRotaModalService.showModal();
+        };
+
+        $rootScope.$on('LatestRotaData', function() {
+          if(todayR.todayRota == true  && todayR.tommRota == false){
+            getTodayRota();
+          }
+          else if(todayR.todayRota == false && todayR.tommRota == true){
+            getTommRota();
+          }                    
+        });
+
+        // todayR.EditRota = function(date, staff, rota){
+        //   if(date === 'Today' || date === 'TODAY'){
+        //     var dt = new Date();
+        //     date = changeFormat(dt);
+        //   } 
+        //   // console.log(date);
+        //   // console.log(staff);
+        //   // console.log(rota);
+        //   // return;
+        //   var addRotaData = {
+        //     staff_id : staff.staff_id,
+        //     date : date,
+        //     name : staff.name,
+        //     rota: rota,
+        //     update: true,
+        //     status : true
+        //   }
+        //   userService.setData(addRotaData);
+        //   addRotaModalService.showModal();
+        // };
+
+        todayR.DeleteRota = function(rota_id){
+          // console.log(rota_id);
+          // return;
+          var alertPopup = $ionicPopup.confirm({
+                   title: 'Alert!',
+                   template: 'Are you sure want to delete this Rota?',
+                   cancelText: 'Cancel',
+                   okText: 'OK',
+                   cancelType: 'button-assertive',
+                   okType: 'button-balanced',
+                   cssClass: 'QUIT'
+          });
+          alertPopup.then(function(res) {
+            if(res){
+              $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
+              StaffService.deleteRota(rota_id).then(function(data, status, headers, config){
+                console.log(data);
+                // return;
+                if(data.status){
+                  $ionicLoading.hide();
+                  var alertPopup = $ionicPopup.alert({
+                           title: 'Success!',
+                           template: 'Rota removed successfully',
+                           cssClass: 'Success'
+                  });
+                  alertPopup.then(function(res) {
+                    $rootScope.$emit("LatestRotaData");
+                  });
+                }else{
+                    $ionicLoading.hide();
+                    // viewRotaModalService.hideModal();
+                    window.plugins.toast.showWithOptions({
+                       message: 'Unable to remove Rota. Please try again later.',
+                       duration: 'long',
+                       position: 'center',
+                       styling: {
+                         borderRadius: 30, // a bit less than default, 0 means a square Toast
+                         backgroundColor: '#CCCCCC', // make sure you use #RRGGBB. Default #333333
+                         alpha: 180, // 0-255, 0 being fully transparent
+                         padding: {
+                           top: 50,
+                           right: 30,
+                           // bottom: 20,
+                           left: 30
+                       }
+                     }
+                   })
+                 $timeout(function()
+                 {
+                 }, 2000);
+                }
+              }, function(data, status, headers, config){
+                  $ionicLoading.hide();
+                  viewRotaModalService.hideModal();
+                  window.plugins.toast.showWithOptions({
+                        message: 'Unable to remove Rota. Please try again later.',
+                        duration: 'long',
+                        position: 'center',
+                        styling: {
+                          borderRadius: 30, // a bit less than default, 0 means a square Toast
+                          backgroundColor: '#CCCCCC', // make sure you use #RRGGBB. Default #333333
+                          alpha: 180, // 0-255, 0 being fully transparent
+                          padding: {
+                            top: 50,
+                            right: 30,
+                            // bottom: 20,
+                            left: 30
+                        }
+                      }
+                    })
+                  $timeout(function()
+                  {
+                  }, 2000); 
+              })
+            }
+
+          });
+        };
+
+        todayR.closeModal = function(){
+          todayRotaModalService.hideModal();
+        };
       };
 
       function allStaffCtrl($scope, $state, $rootScope, $ionicLoading, StaffService, $ionicPopup, StaffStatusService, userService, StaffAppsService,
@@ -2731,6 +3603,8 @@
         var allS = this;
 
         allS.listlength = 10;
+
+        getAllStaff();
 
         allS.doRefreshData = function() {
            getAllStaff();
@@ -2859,8 +3733,9 @@
           allS.allStaffList = [];
           var promise = StaffService.getAllStaff();
           promise.then(function(data, status, headers, config) {
-            
+            console.log(data);
             var response = data.data.data;
+
             if(data.data.status){
               $ionicLoading.hide();
               allS.allStaffList = response.staff_list;
@@ -2894,7 +3769,7 @@
                $rootScope.$emit('no-data');
           });
         }
-        getAllStaff();
+        
 
         allS.loadMore = function(){
           if (!allS.allStaffList){
@@ -2924,6 +3799,17 @@
         viewR.activeTab = 1;
         viewR.thisWeek = true;
         viewR.nextWeek = false; 
+
+        getThisWeekData();
+
+        $rootScope.$on('LatestRotaData', function() {
+          if(viewR.thisWeek == true  && viewR.nextWeek == false){
+            getThisWeekData();
+          }
+          else if(viewR.thisWeek == false && viewR.nextWeek == true){
+            getNextWeekData();
+          }                    
+        });
 
         viewR.setActiveTab = function(tabToSet) {
               // alert(tabToSet);
@@ -3031,16 +3917,7 @@
               }, 2000); 
           })
         };
-        getThisWeekData();
-
-        $rootScope.$on('LatestRotaData', function() {
-          if(viewR.thisWeek == true  && viewR.nextWeek == false){
-            getThisWeekData();
-          }
-          else if(viewR.thisWeek == false && viewR.nextWeek == true){
-            getNextWeekData();
-          }                    
-        });
+        
 
         function getNextWeekData(){
           viewR.nextWeekRotaData = [];
@@ -3233,14 +4110,21 @@
         var addR = this;
         addR.staffInfo = {};
 
+        
+
         var totalData = [];
         if(userService.getData() != ""){
           totalData = userService.getData();
           // console.log(totalData);
           addR.staffInfo = userService.getData();
-          // console.log(addR.staffInfo);
+          console.log(addR.staffInfo);          
+
           userService.setData(null);
         }
+
+        getShiftPatterns();
+        getStaffDesignations();
+        getShiftTypes();
 
         function changeFormat(dt){
             // var today = new Date();
@@ -3375,7 +4259,7 @@
               var response = data.data;
               if(data.status){
                 addR.shiftPatterns = response.shift_patterns;
-                var item = {pattern_id:"1", pattern:"Select Shift"};
+                var item = {pattern_id:"0", pattern:"Select Shift"};
                 addR.shiftPatterns.splice(0, 0, item);
               }
               else{
@@ -3387,7 +4271,7 @@
               $rootScope.$emit("close_add_rota");
           });
         };
-        getShiftPatterns();
+        
 
         function getStaffDesignations(){
           StaffService.staffDesignations(addR.staffInfo.staff_id).then(function(data, status, headers, config){
@@ -3406,7 +4290,7 @@
               $rootScope.$emit("close_add_rota");
           });
         };
-        getStaffDesignations();
+
 
         function getShiftTypes(){
           StaffService.shiftTypes().then(function(data, status, headers, config){
@@ -3429,7 +4313,7 @@
               $rootScope.$emit("close_add_rota");
           });
         };
-        getShiftTypes();
+
 
 
         addR.closeModal = function(){
@@ -3592,6 +4476,8 @@
           userService.setData(null);
         }
 
+        Reasons();
+
         $rootScope.$on('close_status_rota', function(event, res) {          
            if(event && $rootScope.online){
             StaffStatusService.hideModal();
@@ -3633,7 +4519,7 @@
                $rootScope.$emit("close_status_rota");
           });
         };
-        Reasons();
+        
 
         var staffStatus_data = {}
         vmStaffStatus.updateStatus = function(reason){
@@ -3705,6 +4591,8 @@
            $scope.$broadcast('scroll.refreshComplete');
         };
 
+         getBookedTablesData();
+
         function getBookedTablesData(){
           vmBooked.BookedTables = [];
           $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
@@ -3743,7 +4631,7 @@
               $rootScope.$emit('no-data');
           });
         };
-        getBookedTablesData();
+       
 
         function changeFormat(dt){
             // var today = new Date();
@@ -3788,6 +4676,8 @@
       function occupiedTablesCtrl($scope, TablesService, $rootScope, $ionicLoading){
         var vmOccupied = this;
 
+        getOccTablesData();
+
         vmOccupied.doRefreshData = function() {
            getOccTablesData();
            $scope.$broadcast('scroll.refreshComplete');
@@ -3830,13 +4720,15 @@
               $rootScope.$emit('no-data');
           });
         };
-        getOccTablesData();
+        
       };
 
       function AppManagementCtrl($scope, $ionicPopup, $rootScope, AppManagementService, $ionicLoading, updateAppCodeModalService, userService){
         var vmAppManagement = this;
 
         vmAppManagement.listlength = 10;
+
+        getAllDevices();
 
         $rootScope.$on("AppCodeUpdate", function() {
           getAllDevices();
@@ -3845,6 +4737,10 @@
         vmAppManagement.doRefreshData = function(){
           getAllDevices();
           $scope.$broadcast('scroll.refreshComplete');
+        };
+
+        vmAppManagement.clearSearch = function(){
+          vmAppManagement.searchText = "";
         };
 
         function getAllDevices(){
@@ -3903,8 +4799,8 @@
                $ionicLoading.hide();
                $rootScope.$emit('no-data');
           });
-        }
-        getAllDevices();
+        };
+        
 
         vmAppManagement.changeAppCode = function(item){
           // console.log(item);
@@ -3982,7 +4878,7 @@
         };
       };
 
-      function updateAppCodeCtrl($scope, $http, $rootScope, AppManagementService, updateAppCodeModalService, userService, $ionicPopup){
+      function updateAppCodeCtrl($scope, $http, $ionicLoading, $rootScope, AppManagementService, updateAppCodeModalService, userService, $ionicPopup){
           var appCode = this;
 
           appCode.codeValue = {};
@@ -3995,12 +4891,14 @@
 
 
           appCode.updateAppCode = function(){
+             $ionicLoading.show({template: '<ion-spinner icon="ios"></ion-spinner>'});
             AppManagementService.updateAppCode(appCode.codeInfo.code_id, appCode.codeValue.Code).then(function(response) {
               console.log(response);
               // return;
               var alertPopup;
               // console.log(response.msg);
               if(response.status){
+                $ionicLoading.hide();
                 alertPopup = $ionicPopup.alert({
                          title: 'Success!',
                          template: ''+response.msg+'',
@@ -4012,6 +4910,7 @@
                 });
               }
               else{
+                $ionicLoading.hide();
                 alertPopup = $ionicPopup.alert({
                          title: 'Failed',
                          template: ''+response.msg+'',
@@ -4023,7 +4922,9 @@
                 });
               }
             }, function(data, status, headers, config) {
+                 $ionicLoading.hide();
                  $log.error('failure loading movie');
+                 $rootScope.$emit('not-saved');
             });
 
           };

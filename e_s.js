@@ -25,6 +25,7 @@
 
       .service('StaffStatusService', StaffStatusService)
       .service('StaffAppsService', StaffAppsService)
+      .service('todayRotaModalService', todayRotaModalService)
       .service('viewRotaModalService', viewRotaModalService)
       .service('addRotaModalService', addRotaModalService)
       .service('AppManagementService', AppManagementService)
@@ -558,7 +559,7 @@
 
             var updateSinglePrice = function(item_data){
               var deferred = $q.defer();
-              return $http({
+              $http({
               method: 'POST',
               data: $.param({
                         'app_key' : item_data.app_key,
@@ -580,23 +581,23 @@
 
              var updateMultiplePrice = function(item_data){
               var deferred = $q.defer();
-              return $http({
-              method: 'POST',
-              data: $.param({
-                        'app_key' : item_data.app_key,
-                        'item_id' : item_data.item_id,
-                        'multiple_sizeprice': item_data.multiple_sizeprice                        
-                      }),
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-              url: baseurl+'update_item'
-               }).success(function(data, status, headers, config) {
-                       // alert('Yes '+JSON.stringify(data));
-                       deferred.resolve(data);
-                  }, function(data, status, headers, config) {
-                       // alert('Error '+JSON.stringify(data));
-                      
-                       deferred.reject();
-               });
+              $http({
+                  method: 'POST',
+                  data: $.param({
+                            'app_key' : item_data.app_key,
+                            'item_id' : item_data.item_id,
+                            'multi_sizeprice': item_data.multiple_sizeprice                        
+                          }),
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                  url: baseurl+'update_item'
+                   }).success(function(data, status, headers, config) {
+                           // alert('Yes '+JSON.stringify(data));
+                           deferred.resolve(data);
+                      }, function(data, status, headers, config) {
+                           // alert('Error '+JSON.stringify(data));
+                          
+                           deferred.reject();
+                   });
                return deferred.promise;
             };
 
@@ -712,13 +713,43 @@
             return deferred.promise;
           };
 
+          var promotionTypes = function(category_id){
+            var deferred = $q.defer();
+              $http({
+                  method: 'GET',
+                  params: {
+                            'task' : 'get_promotiontype'
+                          },
+                          url: baseurl
+                   }).success(function(data, status, headers, config) {
+                       console.log(data);
+                       deferred.resolve(data);
+                }, function(data, status, headers, config){
+                     deferred.reject();
+                });
+            return deferred.promise;
+          };
+
 
           return{
             updatePromotionPrice : updatePromotionPrice,
-            updateStatus : updateStatus,
-            getPromotions: function() {
-                                return $http.get(baseurl+'?task=promotion_list&app_key='+$rootScope.AppKey);
-                              }
+            updateStatus : updateStatus,       
+            promotionTypes: promotionTypes,     
+            getPromotions: function(type_id) {
+                              if(type_id != undefined) {
+                                  if(type_id != "0"){
+                                    return $http.get(baseurl+'?task=promotion_list&type_id='+type_id+'&app_key='+$rootScope.AppKey);
+                                  }
+                                  
+                                  else{
+                                    return $http.get(baseurl+'?task=promotion_list&app_key='+$rootScope.AppKey);
+                                  }
+                                }                                
+                                else{
+                                  return $http.get(baseurl+'?task=promotion_list&app_key='+$rootScope.AppKey);
+                                }
+          
+          }
 
           }
         };
@@ -786,6 +817,26 @@
                 // hardwareBackButtonClose: false,
                 controller: 'viewRotaCtrl',
                 controllerAs: 'viewR'
+              }).then(function(modal) {
+                    service.modal = modal;
+                  service.modal.show();
+              });
+          };
+          this.hideModal = function() {
+              this.modal.hide();
+          };
+        };
+
+        function todayRotaModalService($ionicModal){
+          this.showModal = function() {
+              var service = this;
+              $ionicModal.fromTemplateUrl('templates/modals/todayRotaModal.html', {
+                scope: null,
+                animation: 'slide-in-right',
+                backdropClickToClose: false,
+                // hardwareBackButtonClose: false,
+                controller: 'todayRotaCtrl',
+                controllerAs: 'todayR'
               }).then(function(modal) {
                     service.modal = modal;
                   service.modal.show();
@@ -1035,9 +1086,7 @@
                      deferred.reject();
                 });
             return deferred.promise;
-          };
-
-
+          };      
 
           return{
             addRotaStaff : addRotaStaff,
@@ -1054,6 +1103,12 @@
             getTodayStaff: function() {
                                 return $http.get(baseurl+'?task=today_staff&app_key='+$rootScope.AppKey);
                               },
+            getTodayRota: function() {
+              return $http.get(baseurl+'?task=today_rota&app_key='+$rootScope.AppKey);
+            },
+            getTommRota: function() {
+              return $http.get(baseurl+'?task=tomorrow_rota&app_key='+$rootScope.AppKey);
+            },
             getAllStaff: function() {
                                 return $http.get(baseurl+'?task=staff_list&app_key='+$rootScope.AppKey);
                               }

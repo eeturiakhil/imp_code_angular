@@ -74,6 +74,7 @@
 
      // var baseurl = "http://192.168.0.65/ielts7band.net/";
      // var baseurl = "http://sandbox786.com/ielts7band/";
+      // var baseurl = "http://sandbox786.com/sandielts/";     
      var baseurl = "https://www.ielts7band.net/";
 
      function LoginService($q, $http, $rootScope, userService) {
@@ -1130,7 +1131,7 @@
                data: $.param({
                            'userKey': $rootScope.userID,
                            'email': $rootScope.Username,
-                           'title': feed.Title,
+                           'title': 'mobile',
                            'feedback': feed.Content
                        }),
                headers: {'Content-Type': 'application/x-www-form-urlencoded'},

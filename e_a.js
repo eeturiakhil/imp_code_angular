@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('eposHybrid', ['ionic', 'starter.controllers', 'googlechart', 'chart.js', 'ngCordova', 'ionic-datepicker'])
+angular.module('eposHybrid', ['ionic', 'starter.controllers', 'ksSwiper', 'googlechart', 'chart.js', 'ngCordova', 'ionic-datepicker'])
 
   .run(function($state, $ionicPlatform, $ionicHistory, $cordovaFile, $rootScope, $cordovaToast, $timeout, $window, LoginService) {
     $ionicPlatform.ready(function() {
@@ -148,7 +148,7 @@ angular.module('eposHybrid', ['ionic', 'starter.controllers', 'googlechart', 'ch
       todayLabel: 'Today',
       // closeLabel: 'Close',
       mondayFirst: false,
-      weeksList: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      weeksList: ["S", "M", "T", "W", "T", "F", "S"],
       monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
       templateType: 'modal',
       from: new Date(2012, 8, 1),
@@ -182,7 +182,8 @@ angular.module('eposHybrid', ['ionic', 'starter.controllers', 'googlechart', 'ch
           controllerAs: 'vmLogin'
         }
       }
-    })
+    })    
+
     .state('app.dashboard', {
       cache : false,
       url: '/dashboard',       
@@ -210,10 +211,10 @@ angular.module('eposHybrid', ['ionic', 'starter.controllers', 'googlechart', 'ch
       views: {
         'menuContent': {
           templateUrl: 'templates/promotion.html'
-        }
-      },
-      controller : "PromotionCtrl",
-      controllerAs : "vmPromotion"
+        },
+        controller : "PromotionCtrl",
+        controllerAs : "vmPromotion"
+      }      
    })
    .state('app.staff-management', {
       url: '/staff-management',
@@ -245,6 +246,19 @@ angular.module('eposHybrid', ['ionic', 'starter.controllers', 'googlechart', 'ch
          }
        }
      })
+
+    // .state('app.todayRota', {
+    //   cache : true,
+    //   url: '/todayrota',
+    //   views: {
+    //     'menuContent': {
+    //       templateUrl: 'templates/todayRota.html',
+    //       controller: 'todayRotaCtrl',
+    //        controllerAs : "todayR"
+
+    //     }
+    //   }
+    // })
 
    .state('app.app-management', {
       url: '/app-management',

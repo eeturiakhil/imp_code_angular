@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-		angular
-			.module('starter.controllers', ['starter.Services'])
+    angular
+      .module('starter.controllers', ['starter.Services'])
       .controller('IntroCtrl', IntroCtrl)
       .controller('AppCtrl', AppCtrl)
       .controller("loginCtrl", loginCtrl)
@@ -37,7 +37,7 @@
       .controller("recordingCtrl", recordingCtrl)
       .controller("imagesSelectionCtrl", imagesSelectionCtrl)
       .controller("speakVideoCtrl", speakVideoCtrl)
-      .controller("iosProductsCtrl", iosProductsCtrl)
+      // .controller("iosProductsCtrl", iosProductsCtrl)
       .filter("trustUrl", ['$sce', function ($sce) {
         return function (recordingUrl) {
             return $sce.trustAsResourceUrl(recordingUrl);
@@ -47,87 +47,11 @@
 
        // var baseurl = "http://192.168.0.65/ielts7band.net/";
       // var baseurl = "http://sandbox786.com/ielts7band/";
+      // var baseurl = "http://sandbox786.com/sandielts/";
       var baseurl = "https://www.ielts7band.net/";
 
       var video;
       var vid;
-
-      function iosProductsCtrl($scope, $ionicLoading, $ionicPopup){
-        $scope.IOSProducts = [];
-
-        var productIds = ['com.ielts7band.app.starter123', 'com.ielts7band.app.master123', 'com.ielts7band.app.expert123'];
-
-        // var spinner = '<ion-spinner icon="dots" class="spinner-stable"></ion-spinner><br/>';
-
-        $scope.loadProducts = function () {
-          // $ionicLoading.show({ template: spinner + 'Loading Products...' });
-          inAppPurchase
-            .getProducts(productIds)
-            .then(function (products) {
-              // $ionicLoading.hide();
-              alert('Products: '+JSON.stringify(products));
-              $scope.products = products;
-            })
-            .catch(function (err) {
-              // $ionicLoading.hide();
-              alert('Error: '+JSON.stringify(err));              
-              console.log(err);
-            });
-        };
-     
-
-          $scope.buy = function (productId) {
-
-            // $ionicLoading.show({ template: spinner + 'Purchasing...' });
-            inAppPurchase
-              .buy(productId)
-              .then(function (data) {
-                alert(JSON.stringify(data));
-                alert('consuming transactionId: ' + data.transactionId);
-                return inAppPurchase.consume(data.type, data.receipt, data.signature);
-              })
-              .then(function () {
-                var alertPopup = $ionicPopup.alert({
-                  title: 'Purchase was successful!',
-                  template: 'Check your console log for the transaction data'
-                });
-                alert('consume done!');
-                // $ionicLoading.hide();
-              })
-              .catch(function (err) {
-                // $ionicLoading.hide();
-                alert(JSON.stringify(err));
-                $ionicPopup.alert({
-                  title: 'Something went wrong',
-                  template: 'Check your console log for the error details'
-                });
-              });
-
-          };
-
-          $scope.restore = function () {
-            // $ionicLoading.show({ template: spinner + 'Restoring Purchases...' });
-            inAppPurchase
-              .restorePurchases()
-              .then(function (purchases) {
-                // $ionicLoading.hide();                
-                alert(JSON.stringify(purchases));
-                $ionicPopup.alert({
-                  title: 'Restore was successful!',
-                  template: 'Check your console log for the restored purchases data'
-                });
-              })
-              .catch(function (err) {
-                // $ionicLoading.hide();
-                alert(JSON.stringify(err));
-                $ionicPopup.alert({
-                  title: 'Something went wrong',
-                  template: 'Check your console log for the error details'
-                });
-              });
-          };
-          
-        };
 
       function IntroCtrl($scope, $state, $ionicSlideBoxDelegate, $ionicSideMenuDelegate, introService, $timeout){
 
@@ -158,8 +82,8 @@
       };
 
       function AppCtrl($scope, userService, $timeout, $location, $http, $state, $ionicModal, popoverService, ProfileService, $sce, $ionicSideMenuDelegate,
-			$rootScope, $ionicPopup, $window, $ionicPopover, forgotpwdModalService, packagesModalService, LoginService, $ionicHistory, $cordovaToast, SpeakingPaperService,
-			loginModalService, registerModalService, enrollModalService, $ionicLoading, $cordovaFile, AUTH_EVENTS, faqModalService, WritingPaperService, introService) {
+      $rootScope, $ionicPopup, $window, $ionicPopover, forgotpwdModalService, packagesModalService, LoginService, $ionicHistory, $cordovaToast, SpeakingPaperService,
+      loginModalService, registerModalService, enrollModalService, $ionicLoading, $cordovaFile, AUTH_EVENTS, faqModalService, WritingPaperService, introService) {
 
         var vmApp = this;
 
@@ -182,31 +106,14 @@
           $rootScope.StaticURL = $sce.trustAsResourceUrl(url);
 
           
-          var listenURL = "https://www.youtube-nocookie.com/embed/65BAE1dM_qY?rel=0&showinfo=0";
+          var listenURL = "https://www.youtube-nocookie.com/embed/7fkIQYBddUE?rel=0&showinfo=0";
           $rootScope.listenURL = $sce.trustAsResourceUrl(listenURL);
-          var readURL = "https://www.youtube-nocookie.com/embed/cdjRq_6M9oc?rel=0&showinfo=0";
+          var readURL = "https://www.youtube-nocookie.com/embed/rjG1pWdVA8Y?rel=0&showinfo=0";
           $rootScope.readURL = $sce.trustAsResourceUrl(readURL);
-          var writeURL = "https://www.youtube-nocookie.com/embed/tLUbjfWVtVE?rel=0&showinfo=0";
+          var writeURL = "https://www.youtube-nocookie.com/embed/88b2u_DdN3Q?rel=0&showinfo=0";
           $rootScope.writeURL = $sce.trustAsResourceUrl(writeURL);
-          var speakURL = "https://www.youtube-nocookie.com/embed/qo8KOyViVMM?rel=0&showinfo=0";
+          var speakURL = "https://www.youtube-nocookie.com/embed/2MLEHQ7MO_k?rel=0&showinfo=0";
           $rootScope.speakURL = $sce.trustAsResourceUrl(speakURL);
-
-          
-
-          // $rootScope.StaticURL = $sce.trustAsResourceUrl(url);
-          // $rootScope.StaticURL = $sce.trustAsResourceUrl(url);
-          // $rootScope.StaticURL = $sce.trustAsResourceUrl(url);
-          // console.log(url);
-
-
-
-          // function dashVideo(){
-          //   LoginService.dashVideo().then(function(data, status, headers, config){
-          //     var url = data.link;
-          //   })
-          // };
-          // dashVideo();
-
 
           $scope.$on(AUTH_EVENTS.notAuthenticated, function(event, res) {
             $ionicLoading.hide();
@@ -451,33 +358,6 @@
             introService.showModal();
           }
 
-          // $ionicPopover.fromTemplateUrl('templates/profileSetting.html', {
-          //    scope: $scope,
-          //  }).then(function(popover) {
-          //    $scope.popover = popover;
-          //
-          //  $scope.profile = function(){
-          //   //  getUserData();
-          //   $scope.popover.hide();
-          //    $state.go("app.user-profile", {}, {reload : true});
-          //  }
-          //  $scope.changePassword = function(){
-          //    $state.go("app.user-changepassword", {}, {reload: true});
-          //    $scope.popover.hide();
-          //  }
-          //  $scope.feedback = function(){
-          //    $state.go("app.user-feedback", {}, {reload: true});
-          //    $scope.popover.hide();
-          //  }
-          //  $scope.logout = function(){
-          //    LoginService.logoutUser();
-          //    LoginService.outUser();
-          //   //  $ionicHistory.clearCache().then(function(){ $state.go('app.home', {}, {reload : true}) });
-          //   $state.go('app.home', {}, {reload: true});
-          //    $scope.popover.hide();
-          //  }
-          // });
-
            vmApp.feedbackForm = function() {
              vmApp.Feedback = {};
              vmApp.SubmitFeedback = function() {
@@ -605,12 +485,7 @@
          $rootScope.$on('updateNormalPackage', function(event, res) {
            var pack = res.dat;
            var Pack = pack + ".Package";
-           LoginService.updatePack(Pack);
-          //  .then(function(){
-          //    $state.go("app.user-dashobard", {}, {reload : true});
-          //    console.log($rootScope.Package);
-          //    // $state.go("app.user-dashobard", {}, {reload : true});
-          //  });
+           LoginService.updatePack(Pack);          
          });
 
      };
@@ -715,20 +590,9 @@
           });
         };
 
-        // if($rootScope.online && count === 0){
           getUserData();
           loadCountries();
-        // }
-        // else{
-        //   var alertPopup = $ionicPopup.alert({
-        //     title: 'Error',
-        //     template: 'No Internet, please try later.',
-        //     cssClass: 'Error'
-        //   });
-        //   alertPopup.then(function(res) {
-        //     // $state.go("app.user-dashobard");
-        //   });
-        // }
+        
 
         vmProfile.checkNumberFormat = function(mobile){
           if(!isValidMobileNumber(mobile)) {
@@ -1529,7 +1393,7 @@
                   });
                   popStatus = true;
                   $ionicLoading.hide();
-              }else if(response.userType == "1" && response.regStatus == false && response.payment == false){
+              }else if(response.userType == "1" && response.regStatus == false && response.payment == false && !$rootScope.iosPlatform){
                 var confirmPopup = $ionicPopup.confirm({
                   title: 'ALERT',
                   template: 'Enrolled Successfully but payment is pending',
@@ -1783,22 +1647,22 @@
        $rootScope.$on('GetNewData', function(event, res) {
          // alert(res.data);
          if(res.data === true){
-           window.plugins.toast.showWithOptions({
-                message: 'You are now Online',
-                duration: 'long',
-                position: 'center',
-                styling: {
-                  borderRadius: 30, // a bit less than default, 0 means a square Toast
-                  backgroundColor: '#325f67', // make sure you use #RRGGBB. Default #333333
-                  alpha: 180, // 0-255, 0 being fully transparent
-                  padding: {
-                    top: 50,
-                    right: 30,
-                    // bottom: 20,
-                    left: 30
-                 }
-              }
-            })
+           // window.plugins.toast.showWithOptions({
+           //      message: 'You are now Online',
+           //      duration: 'long',
+           //      position: 'center',
+           //      styling: {
+           //        borderRadius: 30, // a bit less than default, 0 means a square Toast
+           //        backgroundColor: '#325f67', // make sure you use #RRGGBB. Default #333333
+           //        alpha: 180, // 0-255, 0 being fully transparent
+           //        padding: {
+           //          top: 50,
+           //          right: 30,
+           //          // bottom: 20,
+           //          left: 30
+           //       }
+           //    }
+           //  })
             $state.go("app.user-dashobard", {}, {reload : true});
          }
          else{
@@ -2284,7 +2148,7 @@
 
    function enrollCtrl($scope, $state, ProfileService, enrollModalService, userService, $rootScope, registerModalService, $ionicLoading, loginModalService,
                 starterModalService, masterModalService, expertModalService, packagesModalService, $ionicPopup, $sce, termsService,
-                LoginService, $ionicHistory) {
+                LoginService, $ionicHistory, $http) {
 
      $scope.enroll = {};
      $scope.enrollSuccess = false;
@@ -2327,21 +2191,7 @@
               else if(response.id){
                 // if(response.payment == true){
                   $scope.oldUser = true;
-                  $scope.status = true;
-                 //  var alertPopup = $ionicPopup.alert({
-                 //    title: 'Alert',
-                 //    template: 'This user is already enrolled!',
-                 //    cssClass: 'Error'
-                 //  });
-                 //
-                 // alertPopup.then(function(res) {
-                 //   // $scope.enroll.EmailId = "";
-                 // });
-                // }
-                // else{
-                //   $scope.oldUser = true;
-                //   $scope.status = true;
-                // }
+                  $scope.status = true;                
               }
               // return;
             });
@@ -2461,68 +2311,31 @@
     //  };
 
      $scope.enrollUser = function(enroll){
-      console.log($scope.enroll);
+      // console.log($scope.enroll);
       // return;
       if(!angular.equals({}, enroll.Choice) && enroll.Choice != undefined){
-         if($rootScope.userID){
-           console.log("Update");
-           $scope.oldUser = true;
-           var userData = {
-             fname : $scope.enroll.fname,
-             EmailId : $scope.enroll.EmailId,
-             userID : $rootScope.userID,
-             Module  : $scope.enroll.Module,
-             Choice  : $scope.enroll.Choice
-           };
-           $ionicLoading.show({template : 'Redirecting to payment gateway...'});
-           LoginService.updateEnrollUser(userData).then(function(response){
-             console.log(response);
-             if(response){
-               $rootScope.$emit("enrolledUser", {data: "1"});
-              //  alert("Old User");
-              console.log($rootScope.enrollType);
-               $scope.enrollSuccess = true;
-               console.log(response);
-               var data;
-               data = response.split("||");
 
-                 if (data[0] == "yes") {
-
-                     var ORDER_ID = data[1];
-                     var ACCOUNT = data[2];
-                     var TIMESTAMP = data[3];
-                     var CURRENCY = "USD";
-                     var AMOUNT = data[5];
-                     var MD5HASH = data[6];
-                     var MERCHANT_ID = data[7];
-
-
-                     var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID;
-                     $scope.payment = $sce.trustAsResourceUrl(payment);
-                     $ionicLoading.hide();
-                  }
-               }
-               else{
-                 $ionicLoading.hide();
-               }
-            });
-         }
-         else{
-           $ionicLoading.show({template : 'Redirecting...'});
-           LoginService.checkUserType($scope.enroll.EmailId).then(function(response){
-             console.log(response);
-
-             if(response.status == false){
-               $scope.oldUser = false;
-               console.log("New");
-               LoginService.enrollUser(enroll).then(function(response){
+          console.log(enroll);
+          // return;
+             if($rootScope.userID){
+               console.log("Update");
+               $scope.oldUser = true;
+               var userData = {
+                 fname : $scope.enroll.fname,
+                 EmailId : $scope.enroll.EmailId,
+                 userID : $rootScope.userID,
+                 Module  : $scope.enroll.Module,
+                 Choice  : $scope.enroll.Choice
+               };
+               $ionicLoading.show({template : 'Redirecting to payment gateway...'});
+               LoginService.updateEnrollUser(userData).then(function(response){
                  console.log(response);
                  if(response){
-                   // $rootScope.$emit("enrolledUser", {data: "1"});
-                  //  alert("New User");
+                   $rootScope.$emit("enrolledUser", {data: "1"});
+                  //  alert("Old User");
+                  console.log($rootScope.enrollType);
                    $scope.enrollSuccess = true;
                    console.log(response);
-
                    var data;
                    data = response.split("||");
 
@@ -2535,11 +2348,26 @@
                          var AMOUNT = data[5];
                          var MD5HASH = data[6];
                          var MERCHANT_ID = data[7];
+                         var enrollApp = "app";   
 
-
-                         var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID;
-                         $scope.payment = $sce.trustAsResourceUrl(payment);
-                         $ionicLoading.hide();
+                         if($rootScope.iosPlatform){
+                          $scope.enrollSuccess = false;
+                          var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp;                           
+                          var URL = cordova.InAppBrowser
+                                      .open(encodeURI(payment), '_blank', 'location=no');
+                                      $ionicLoading.hide();
+                         }
+                         else{
+                          $scope.enrollSuccess = true;
+                            var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp;
+                            console.log(payment);
+                            $scope.payment = $sce.trustAsResourceUrl(payment);
+                            $ionicLoading.hide();
+                         }
+                   
+                        
+                         // cordova.InAppBrowser.open(payment, '_blank', 'location=no');
+                         
                       }
                    }
                    else{
@@ -2547,73 +2375,138 @@
                    }
                 });
              }
-             else if(response.id && response.userType == "1"){
-               console.log("Stop");
-               // if(response.payment == true){
-                 $scope.oldUser = true;
-                 $ionicLoading.hide();
-                 // $scope.status = false;
-                 var alertPopup = $ionicPopup.alert({
-                   title: 'Alert',
-                   template: 'This user is already exists!',
-                   cssClass: 'Error'
-                 });
+             else{
+               $ionicLoading.show({template : 'Redirecting...'});
+               LoginService.checkUserType($scope.enroll.EmailId).then(function(response){
+                 console.log(response);
 
-                alertPopup.then(function(res) {
-                 // $scope.enroll.EmailId = "";
-                });
-               }
-               else if(response.id && response.userType == "2"){
-                   console.log("Update");
-                   $scope.oldUser = true;
-                   var userData = {
-                   fname : enroll.fname,
-                   EmailId : enroll.EmailId,
-                   userID : response.id,
-                   Module  : enroll.Module,
-                   Choice  : enroll.Choice
-                 }
-                LoginService.updateEnrollUser(userData).then(function(response){
-                  console.log(response);
-                  if(response){
-                    // $rootScope.$emit("enrolledUser", {data: "1"});
-                   //  alert("Old User");
-                   // console.log($rootScope.enrollType);
-                    $scope.enrollSuccess = true;
-                   //  console.log(response);
-                    var data;
-                    data = response.split("||");
-               
-                      if (data[0] == "yes") {
-               
-                          var ORDER_ID = data[1];
-                          var ACCOUNT = data[2];
-                          var TIMESTAMP = data[3];
-                          var CURRENCY = "USD";
-                          var AMOUNT = data[5];
-                          var MD5HASH = data[6];
-                          var MERCHANT_ID = data[7];
-               
-               
-                          var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID;
-                          $scope.payment = $sce.trustAsResourceUrl(payment);
-                          $ionicLoading.hide();
+                 if(response.status == false){  
+                   $scope.oldUser = false;
+                   console.log("New");
+                   LoginService.enrollUser(enroll).then(function(response){
+                     console.log(response);
+                     if(response){
+                       // $rootScope.$emit("enrolledUser", {data: "1"});
+                      //  alert("New User");
+                       $scope.enrollSuccess = true;
+                       console.log(response);
+
+                       var data;
+                       data = response.split("||");
+
+                         if (data[0] == "yes") {
+
+                             var ORDER_ID = data[1];
+                             var ACCOUNT = data[2];
+                             var TIMESTAMP = data[3];
+                             var CURRENCY = "USD";
+                             var AMOUNT = data[5];
+                             var MD5HASH = data[6];
+                             var MERCHANT_ID = data[7];                
+                             var newuser = "new";   
+                             var enrollApp = "app";   
+                   
+                             if($rootScope.iosPlatform){
+                              $scope.enrollSuccess = false;
+                              var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp;                           
+                              var URL = cordova.InAppBrowser
+                                          .open(encodeURI(payment), '_blank', 'location=no');
+                                          $ionicLoading.hide();
+                             }
+                             else{
+                              $scope.enrollSuccess = true;
+                                var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp;
+                                console.log(payment);
+                                $scope.payment = $sce.trustAsResourceUrl(payment);
+                                $ionicLoading.hide();
+                             }
+
+                              // var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp+"&newuser="+newuser;
+                              // console.log(payment);
+                              
+                              // // cordova.InAppBrowser.open(payment, '_blank', 'location=no');
+                              // $scope.payment = $sce.trustAsResourceUrl(payment);
+                              // $ionicLoading.hide();
+                             
+                          }
                        }
-                    }
-                    else{
-                      $ionicLoading.hide();
-                    }
-                 });
-               }
-             
-             // if($scope.oldUser){
-               
-             // }
-             // else{
-             //
-             // }
-         })
-       }
+                       else{
+                         $ionicLoading.hide();
+                       }
+                    });
+                 }
+                 else if(response.id && response.userType == "1" && response.payment === true){
+                   console.log("Stop");
+                   // if(response.payment == true){
+                     $scope.oldUser = true;
+                     $ionicLoading.hide();
+                     // $scope.status = false;
+                     var alertPopup = $ionicPopup.alert({
+                       title: 'Alert',
+                       template: 'This user already has a package. Please login!',
+                       cssClass: 'Error'
+                     });
+
+                    alertPopup.then(function(res) {
+                     // $scope.enroll.EmailId = "";
+                    });
+                   }
+                   else if(response.id && (response.userType == "1" || response.userType == "2") && response.payment === false){
+                       console.log("Update");
+                       $scope.oldUser = true;
+                       var userData = {
+                       fname : enroll.fname,
+                       EmailId : enroll.EmailId,
+                       userID : response.id,
+                       Module  : enroll.Module,
+                       Choice  : enroll.Choice
+                     }
+                    LoginService.updateEnrollUser(userData).then(function(response){
+                      console.log(response);
+                      if(response){
+                        // $rootScope.$emit("enrolledUser", {data: "1"});
+                       //  alert("Old User");
+                       // console.log($rootScope.enrollType);
+                        $scope.enrollSuccess = true;
+                       //  console.log(response);
+                        var data;
+                        data = response.split("||");
+                   
+                          if (data[0] == "yes") {
+                   
+                              var ORDER_ID = data[1];
+                              var ACCOUNT = data[2];
+                              var TIMESTAMP = data[3];
+                              var CURRENCY = "USD";
+                              var AMOUNT = data[5];
+                              var MD5HASH = data[6];
+                              var MERCHANT_ID = data[7];
+                              
+                              var enrollApp = "app";   
+                   
+                              if($rootScope.iosPlatform){
+                                $scope.enrollSuccess = false;
+                                var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp;                           
+                                var URL = cordova.InAppBrowser
+                                            .open(encodeURI(payment), '_blank', 'location=no');
+                                            $ionicLoading.hide();
+                               }
+                               else{
+                                $scope.enrollSuccess = true;
+                                  var payment = baseurl+"payment/request?ORDER_ID="+ORDER_ID+"&ACCOUNT="+ACCOUNT+"&TIMESTAMP="+TIMESTAMP+"&CURRENCY="+CURRENCY+"&AMOUNT="+AMOUNT+"&MD5HASH="+MD5HASH+"&MERCHANT_ID="+MERCHANT_ID+"&enrollApp="+enrollApp;
+                                  console.log(payment);
+                                  $scope.payment = $sce.trustAsResourceUrl(payment);
+                                  $ionicLoading.hide();
+                               }                        
+                           }
+                        }
+                        else{
+                          $ionicLoading.hide();
+                        }
+                     });
+                   }
+             })
+           }
        }else{
          var alertPopup = $ionicPopup.alert({
            title: 'Error',
@@ -2743,7 +2636,7 @@
 
               confirmPopup.then(function(res) {
                   if(res){
-
+                    console.log("Payment");
                   }
                   else{
                     $ionicLoading.show({template : 'Loading...'});
@@ -3042,19 +2935,6 @@
             //  vmPackage.closePackages();
              //enrollModalService.hideModal();
        };
-
-
-       // Enroll package Modals close
-       // vmPackage.closeIelts_starter = function() {
-       //   starterModalService.hideModal();
-       // };
-       // vmPackage.closeIelts_master = function() {
-       //   masterModalService.hideModal();
-       // };
-       // vmPackage.closeIelts_expert = function() {
-       //   expertModalService.hideModal();
-       // };
-       // Enroll package Modals close
 
        // Close packages modal
        vmPackage.closePackages = function() {
@@ -3462,23 +3342,6 @@
        vmWrite.getRegisteredData();
 
       //  vmWrite.getData();
-
-      // if($rootScope.enrollType === "1"){
-      //   vmWrite.getRegisteredData();
-      // }else{
-      //  //  var examType = "listening";
-      //   getFreeTrialData();
-      // }
-      //
-      // function getFreeTrialData() {
-      //   vmWrite.writingData = [];
-      //   tabsService.getFreeTrialPapers($rootScope.Username, $rootScope.Password, examType, $rootScope.Course).success(function(payload) {
-      //     vmWrite.writingData = payload.list;
-      //     $ionicLoading.hide();
-      //   }, function(errorPayload) {
-      //        console.log('failure loading movie', errorPayload);
-      //   });
-      // };
 
        vmWrite.getWritingPaper = function(item){
       //   console.log(item);
@@ -3911,10 +3774,10 @@
        var sound = document.getElementById(queNo);
        sound.play();
       //  for(var j=0; j<sound.length; j++){
-      // 		sounds[j].play();
-      // 		// play = true;
-      // 		// document.getElementById("playAudioID").innerHTML = "Pause";
-      // 	}
+      //    sounds[j].play();
+      //    // play = true;
+      //    // document.getElementById("playAudioID").innerHTML = "Pause";
+      //  }
      };
 
 

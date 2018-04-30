@@ -351,15 +351,15 @@ angular.module('ielts7band', ['ionic', 'starter.controllers', 'ngCordova', 'star
         }
       }
     })
-    .state('app.ios_products', {
-      url: '/ios_products',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/ios_products.html',
-          controller: 'iosProductsCtrl'
-        }
-      }
-    })
+    // .state('app.ios_products', {
+    //   url: '/ios_products',
+    //   views: {
+    //     'menuContent': {
+    //       templateUrl: 'templates/ios_products.html',
+    //       controller: 'iosProductsCtrl'
+    //     }
+    //   }
+    // })
     .state('app.user-profile', {
       url: '/profile',
       views: {
